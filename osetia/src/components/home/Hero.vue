@@ -45,7 +45,7 @@
 <style scoped>
 .hero {
   padding: 40px 0;
-  background-color: #efe3d6;
+  background-color: #F1DFCB;
   overflow-x: hidden;
 }
 
@@ -100,10 +100,8 @@
   width: 716px;
   position: absolute;
   right: 0;
-  /* Начальная позиция - слева (за пределами видимости) */
   transform: translateX(-100%);
   opacity: 0;
-  /* Анимация перемещения */
   animation: slideFromLeftToRight 0.8s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
 }
 

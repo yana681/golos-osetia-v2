@@ -49,9 +49,8 @@ const steps = [
 
 <style scoped>
 .steps {
-  padding: 80px 0;
-  background-color: #efe3d6;
-  border-top: 2px solid rgba(52, 103, 50, 1); /* Линия как в других блоках */
+  padding: 80px 0;background-color: #F1DFCB;
+  border-top: 2px solid rgba(52, 103, 50, 1); 
 }
 
 .container {
@@ -76,7 +75,7 @@ const steps = [
 
 .step-item {
   display: flex;
-  flex-direction: row; /* Текст справа от цифры */
+  flex-direction: row; 
   align-items: flex-start;
   gap: 20px;
   flex: 1;
@@ -100,8 +99,6 @@ const steps = [
   font-size: 64px;
   font-weight: 700;
   color: #fff;
-  
-  /* Магия центрирования: */
   line-height: 0; 
   display: block;
   padding-top: 5px; 
@@ -111,12 +108,12 @@ const steps = [
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding-top: 10px; /* Чтобы текст был вровень с верхом плашки */
+  padding-top: 10px;
 }
 
 .step-header {
   font-family: 'Playfair Display', serif;
-  font-size: 20px; /* Размер из макета */
+  font-size: 20px;
   font-weight: 700;
   margin: 0;
   color: #000;
@@ -124,7 +121,7 @@ const steps = [
 
 .step-text {
   font-family: 'Playfair Display', serif;
-  font-size: 16px; /* Размер из макета */
+  font-size: 16px; 
   line-height: 1.2;
   color: #000;
   margin: 0;

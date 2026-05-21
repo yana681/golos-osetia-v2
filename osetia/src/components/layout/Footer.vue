@@ -48,13 +48,13 @@
 
 <style scoped>
 .footer {
-  background-color: rgba(52, 103, 50, 1); /* Зеленый фон из макета */
+  background-color: rgba(52, 103, 50, 1); 
   padding: 60px 0 30px 0;
   color: #ffffff;
 }
 
 .container {
-  max-width: 1320px; /* Стандартная ширина контейнера проекта */
+  max-width: 1320px;
   margin: 0 auto;
   padding: 0 15px;
 }
@@ -77,7 +77,7 @@
   font-family: 'Roboto', sans-serif;
   font-size: 24px;
   font-weight: 600;
-  line-height: 42px; /* По макету */
+  line-height: 42px;
   margin: 0;
 }
 
@@ -110,7 +110,7 @@
 }
 
 .app-link img {
-  height: 42px; /* Высота кнопок магазинов по макету */
+  height: 42px;
   width: auto;
 }
 
@@ -121,7 +121,7 @@
 }
 
 .social-link img {
-  width: 32px; /* Размер иконок соцсетей */
+  width: 32px;
   height: 32px;
   transition: transform 0.3s;
 }

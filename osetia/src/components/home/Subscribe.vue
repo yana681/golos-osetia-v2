@@ -34,8 +34,7 @@
 
 <style scoped>
 .subscribe {
-  padding: 80px 0;
-  background-color: #efe3d6;
+  padding: 80px 0;background-color: #F1DFCB;
 }
 
 .container {

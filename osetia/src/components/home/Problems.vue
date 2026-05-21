@@ -61,8 +61,7 @@ const problems = [
 
 <style scoped>
 .problems {
-  padding: 60px 0;
-  background-color: #efe3d6; 
+  padding: 60px 0;background-color: #F1DFCB;
   border-top: 2px solid rgba(97, 173, 99, 1);
 }
 
@@ -100,7 +99,6 @@ const problems = [
 }
 
 .problem-card {
-  /* Заменяем flex: 1 на фиксированные размеры из макета */
   flex: 0 0 315px;
   height: 365px;
   background-color: rgba(52, 103, 50, 1);
@@ -110,7 +108,7 @@ const problems = [
   flex-direction: column;
   justify-content: space-between;
   color: #fff;
-  box-sizing: border-box; /* Чтобы padding не увеличивал размер карточки */
+  box-sizing: border-box; 
 }
 .card-title-wrapper {
   display: flex;
@@ -134,8 +132,8 @@ const problems = [
 
 .card-text {
   font-family: 'Playfair Display', serif;
-  font-size: 20px; /* Size 20px */
-  line-height: 30px; /* Line height 30px */
+  font-size: 20px;
+  line-height: 30px;
   font-weight: 500;
   opacity: 0.9;
 }

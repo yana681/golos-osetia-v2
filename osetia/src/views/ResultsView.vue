@@ -5,7 +5,9 @@
         <h2 class="main-title">Результаты работы портала</h2>
         
         <div class="stats-container">
-          <img src="/src/assets/icons/check.png" alt="check" class="check-icon" />
+          <div class="icon-pulse-wrapper">
+            <img src="/src/assets/icons/check.png" alt="check" class="check-icon" />
+          </div>
           <div class="stats-text">
             <span class="count">182 256</span>
             <span class="subtext">проблем решено</span>
@@ -25,18 +27,23 @@
       </header>
 
       <div class="results-grid">
-       <div v-for="card in resultsData" :key="card.id" class="result-card">
+        <div v-for="card in resultsData" :key="card.id" class="result-card">
           <div class="card-image-wrapper">
             <img :src="card.image" :alt="card.category" class="card-img" />
             <div class="card-overlay">
-              <span class="view-details">Подробнее →</span>
+              <span class="view-details">Подробнее</span>
             </div>
           </div>
           <div class="card-body">
             <p class="card-address">{{ card.address }}</p>
             <div class="card-footer">
               <span class="card-category">{{ card.category }}</span>
-              <span class="card-status">{{ card.status }}</span>
+              <span 
+                class="card-status" 
+                :class="{ 'status-in-progress': card.status === 'В работе' }"
+              >
+                {{ card.status }}
+              </span>
             </div>
           </div>
         </div>
@@ -135,71 +142,64 @@ const resultsData = ref([
 .results-header {
   display: flex;
   align-items: center;
-  padding: 40px 0;
-  gap: 60px;
-}
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  padding: 50px 0 30px 0;
+  gap: 40px;
 }
 
 .main-title {
-  width: 460px;
+  width: 420px;
   font-family: 'Playfair Display', serif;
   font-weight: 700;
-  font-size: 32px;
+  font-size: 36px;
   line-height: 1.2;
-  letter-spacing: -0.32px;
-  color: #000;
+  letter-spacing: -0.5px;
+  color: #111111;
   position: relative;
-  padding-left: 20px;
+  padding-left: 24px;
 }
 
 .main-title::before {
   content: '';
   position: absolute;
   left: 0;
-  top: 0;
-  height: 100%;
-  width: 4px;
+  top: 4px;
+  height: calc(100% - 8px);
+  width: 5px;
   background-color: #386633;
-  border-radius: 2px;
+  border-radius: 4px;
 }
-
 .stats-container {
   display: flex;
   align-items: center;
-  gap: 15px;
-  background: rgba(56, 102, 51, 0.1);
-  padding: 10px 20px;
-  border-radius: 50px;
-  transition: transform 0.3s ease, background 0.3s ease;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 12px 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 24px rgba(56, 102, 51, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .stats-container:hover {
-  transform: translateY(-3px);
-  background: rgba(56, 102, 51, 0.15);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 12px 30px rgba(56, 102, 51, 0.08);
+}
+
+.icon-pulse-wrapper {
+  background: rgba(56, 102, 51, 0.1);
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .check-icon {
-  width: 34px;
-  height: 35px;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
+  width: 24px;
+  height: 24px;
 }
 
 .stats-text {
@@ -210,42 +210,47 @@ const resultsData = ref([
 .count {
   font-family: 'Playfair Display', serif;
   font-weight: 700;
-  font-size: 34px;
-  color: rgba(120, 63, 28, 1);
-  line-height: 1;
+  font-size: 32px;
+  color: #783f1c;
+  line-height: 1.1;
 }
 
 .subtext {
-  font-family: 'Playfair Display', serif;
-  font-size: 14px;
-  color: #000;
+  font-family: sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
 }
 
 .info-tags {
   display: flex;
-  gap: 40px;
+  gap: 20px;
   margin-left: auto;
 }
 
 .info-label-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding: 10px 15px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 10px;
-  transition: transform 0.3s ease;
+  gap: 4px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
 }
 
 .info-label-wrapper:hover {
   transform: translateY(-2px);
   background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
 }
 
 .info-label {
-  font-family: 'Playfair Display', serif;
-  font-size: 14px;
+  font-family: sans-serif;
+  font-size: 11px;
   color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .info-value {
@@ -255,42 +260,43 @@ const resultsData = ref([
   color: #386633;
 }
 
+/* Сетка карточек */
 .results-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-top: 20px;
+  gap: 30px;
+  margin-top: 25px;
 }
 
 .result-card {
   background: #FFFFFF;
-  border: 1px solid rgba(52, 103, 53, 1);
-  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 24px;
   overflow: hidden;
-  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .result-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  border-color: rgba(130, 89, 64, 1);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(52, 103, 53, 0.12);
 }
 
 .card-image-wrapper {
   position: relative;
   overflow: hidden;
-  height: 285px;
+  height: 240px;
 }
 
 .card-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .result-card:hover .card-img {
-  transform: scale(1.08);
+  transform: scale(1.04);
 }
 
 .card-overlay {
@@ -299,7 +305,9 @@ const resultsData = ref([
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(56, 102, 51, 0.8);
+  background: rgba(52, 103, 53, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -313,13 +321,14 @@ const resultsData = ref([
 
 .view-details {
   color: white;
-  font-family: 'Playfair Display', serif;
-  font-size: 18px;
+  font-family: sans-serif;
+  font-size: 14px;
   font-weight: 600;
-  padding: 10px 20px;
-  border: 2px solid white;
-  border-radius: 30px;
-  transform: translateY(20px);
+  padding: 10px 24px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50px;
+  backdrop-filter: blur(5px);
+  transform: translateY(15px);
   transition: transform 0.3s ease;
 }
 
@@ -328,21 +337,21 @@ const resultsData = ref([
 }
 
 .card-body {
-  padding: 15px 19px;
+  padding: 24px;
 }
 
 .card-address {
-  font-family: 'Playfair Display', serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 1.4;
-  color: rgba(52, 103, 53, 1);
-  margin-bottom: 12px;
-  transition: color 0.3s ease;
-}
-
-.result-card:hover .card-address {
-  color: rgba(130, 89, 64, 1);
+  font-family: sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  height: 44px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .card-footer {
@@ -352,69 +361,54 @@ const resultsData = ref([
 }
 
 .card-category {
-  font-family: 'Playfair Display', serif;
-  font-size: 14px;
-  background: rgba(52, 103, 53, 0.1);
-  padding: 4px 12px;
-  border-radius: 20px;
-  color: rgba(52, 103, 53, 1);
-}
-
-.card-status {
-  font-family: 'Playfair Display', serif;
+  font-family: sans-serif;
   font-size: 12px;
-  color: #4caf50;
   font-weight: 600;
+  background: rgba(52, 103, 53, 0.08);
+  padding: 6px 14px;
+  border-radius: 10px;
+  color: #346735;
+}
+.card-status {
+  font-family: sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 50px;
+  background-color: rgba(46, 204, 113, 0.15);
+  color: #27ae60;
+  white-space: nowrap;
 }
 
-.card-status:contains("В работе") {
-  color: #ff9800;
+.card-status.status-in-progress {
+  background-color: rgba(230, 126, 34, 0.15);
+  color: #d35400;
 }
 
 .footer-action {
   display: flex;
   justify-content: center;
-  margin-top: 50px;
+  margin-top: 60px;
 }
-
 .btn-all {
-  width: 382px;
-  height: 51px;
-  background: rgba(130, 89, 64, 1);
+  width: 280px;
+  height: 54px;
+  background: #825940;
   color: #FFF;
   border: none;
-  border-radius: 25px;
-  font-family: 'Playfair Display', serif;
-  font-size: 18px;
+  border-radius: 16px;
+  font-family: sans-serif;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-all::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
+  box-shadow: 0 4px 15px rgba(130, 89, 64, 0.15);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-all:hover {
-  background: rgba(100, 50, 20, 1);
+  background: #70472e;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.btn-all:hover::before {
-  width: 300px;
-  height: 300px;
+  box-shadow: 0 8px 25px rgba(130, 89, 64, 0.3);
 }
 
 .btn-all:active {
@@ -425,18 +419,18 @@ const resultsData = ref([
 @media (max-width: 1200px) {
   .results-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    gap: 24px;
   }
   
   .results-header {
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 24px;
   }
   
   .info-tags {
     margin-left: 0;
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 }
 
@@ -447,22 +441,21 @@ const resultsData = ref([
   
   .main-title {
     width: 100%;
-    font-size: 28px;
+    font-size: 30px;
   }
   
   .stats-container {
     width: 100%;
-    justify-content: center;
+    box-sizing: border-box;
   }
   
   .info-tags {
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
   }
   
   .btn-all {
     width: 100%;
-    max-width: 382px;
   }
 }
 </style>

@@ -31,7 +31,7 @@
 
 <style scoped>
 .header {
-  background-color: #efe3d6; 
+  background-color: #F1DFCB;
   padding: 20px 0;
   border-bottom: 2px solid #2e5a27;
 }
