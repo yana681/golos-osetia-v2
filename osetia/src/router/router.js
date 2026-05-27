@@ -6,6 +6,7 @@ import NewsView from '../views/NewsView.vue'
 import AboutView from '../views/AboutView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
+import ReportProblemView from '../views/ReportProblemView.vue'
 const router = createRouter({
 	history: createWebHistory(),
 	routes: [
@@ -13,6 +14,11 @@ const router = createRouter({
 			path: '/',
 			name: 'home',
 			component: HomeView,
+		},
+		{
+			path: '/report-problem',
+			name: 'report-problem',
+			component: ReportProblemView,
 		},
 		{
 			path: '/themes',

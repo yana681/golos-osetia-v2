@@ -1,3 +1,12 @@
+<script setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const goToReportProblem = () => {
+  router.push('/report-problem')
+}
+</script>
 <template>
   <section class="hero">
     <div class="container">
@@ -18,7 +27,12 @@
           <p class="hero-description">
             Вы сообщаете о проблемах, мы разбираемся и придаем огласке. Вместе делаем город лучше!
           </p>
-          <button class="cta-button">Сообщить о проблеме</button>
+            <button
+            class="cta-button"
+            @click="goToReportProblem"
+          >
+            Сообщить о проблеме
+          </button>
         </div>
 
         <div class="stats">
