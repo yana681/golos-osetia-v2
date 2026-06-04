@@ -1,33 +1,91 @@
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const name = ref('')
+const email = ref('')
+const password = ref('')
+const passwordConfirm = ref('')
+const acceptTerms = ref(false)
+
+const handleRegister = () => {
+  // Базовая проверка совпадения паролей
+  if (password.value !== passwordConfirm.value) {
+    alert('Пароли не совпадают!')
+    return
+  }
+
+  console.log('Регистрация пользователя:', {
+    name: name.value,
+    email: email.value,
+    password: password.value
+  })
+
+  router.push({ name: 'profile' })
+}
+</script>
+
 <template>
   <div class="register-page">
     <div class="register-bg-image"></div>
     <div class="register-overlay"></div>
 
     <div class="register-form-container">
-      <form class="register-form" @submit.prevent>
+      <form class="register-form" @submit.prevent="handleRegister">
         <h1 class="form-title">Голос Осетии</h1>
         <p class="form-subtitle">Создание нового аккаунта</p>
 
         <div class="input-group">
-          <input type="text" placeholder="Имя и фамилия" class="form-input" required />
+          <input 
+            v-model="name" 
+            type="text" 
+            placeholder="Имя и фамилия" 
+            class="form-input" 
+            required 
+          />
         </div>
 
         <div class="input-group">
-          <input type="email" placeholder="Электронная почта" class="form-input" required />
+          <input 
+            v-model="email" 
+            type="email" 
+            placeholder="Электронная почта" 
+            class="form-input" 
+            required 
+          />
         </div>
 
         <div class="password-row">
           <div class="input-group">
-            <input type="password" placeholder="Пароль" class="form-input" required />
+            <input 
+              v-model="password" 
+              type="password" 
+              placeholder="Пароль" 
+              class="form-input" 
+              required 
+            />
           </div>
           <div class="input-group">
-            <input type="password" placeholder="Повторите пароль" class="form-input" required />
+            <input 
+              v-model="passwordConfirm" 
+              type="password" 
+              placeholder="Повторите пароль" 
+              class="form-input" 
+              required 
+            />
           </div>
         </div>
 
         <div class="form-terms">
           <label class="terms-label">
-            <input type="checkbox" required class="terms-checkbox" />
+            <input 
+              v-model="acceptTerms" 
+              type="checkbox" 
+              required 
+              class="terms-checkbox" 
+            />
             <span>Я согласен с <a href="#">условиями использования</a></span>
           </label>
         </div>
@@ -110,6 +168,7 @@
 }
 
 .form-input {
+  box-sizing: border-box;
   width: 100%;     
   height: 50px;
   background: rgba(255, 255, 255, 0.15);
@@ -130,7 +189,7 @@
 .password-row {
   display: flex;
   justify-content: space-between; 
-  gap: 40px;                      /* Четкий зазор между полями */
+  gap: 40px;                   
   margin-bottom: 18px;
   width: 100%;
 }
@@ -138,7 +197,7 @@
 .password-row .input-group {
   flex: 1; 
   margin-bottom: 0; 
-  min-width: 0;    /* Важно для корректной работы flexbox с input */
+  min-width: 0;   
 }
 
 .form-terms {
@@ -194,10 +253,9 @@
   text-decoration: none;
 }
 
-/* --- АДАПТИВНОСТЬ: Перестроение полей на мобильных --- */
 @media (max-width: 480px) {
   .password-row {
-    flex-direction: column; /* Поля встают друг под друга */
+    flex-direction: column;
     gap: 10px;
   }
 }

@@ -7,6 +7,8 @@ import AboutView from '../views/AboutView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import ReportProblemView from '../views/ReportProblemView.vue'
+import UserProfileView from '../views/UserProfileView.vue'
+import AdminView from '../views/AdminView.vue'
 const router = createRouter({
 	history: createWebHistory(),
 	routes: [
@@ -14,6 +16,16 @@ const router = createRouter({
 			path: '/',
 			name: 'home',
 			component: HomeView,
+		},
+		{
+			path: '/profile',
+			name: 'profile',
+			component: UserProfileView
+		},
+		{
+			path: '/admin',
+			name: 'admin',
+			component: AdminView
 		},
 		{
 			path: '/report-problem',

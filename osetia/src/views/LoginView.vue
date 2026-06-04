@@ -71,7 +71,6 @@
   position: relative;
   width: 100%;
   max-width: 420px;
-  /* фон с размытием (Glassmorphism) */
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -104,6 +103,8 @@
 
 .form-input {
   width: 100%;
+  
+  box-sizing: border-box;
   height: 52px;
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -122,6 +123,7 @@
 
 .form-input:focus {
   background: rgba(255, 255, 255, 0.25);
+  
   border-color: #ffffff;
 }
 
