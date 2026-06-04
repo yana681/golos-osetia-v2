@@ -83,7 +83,7 @@ const allReports = ref([
     title: "Яма на тротуаре по ул. Ленина, 23",
     description: "Глубокая яма мешает проходу, особенно в дождливую погоду.",
     statusText: "На проверке",
-    statusClass: "checking", // Ключ для фильтрации
+    statusClass: "checking", 
     location: "ул. Ленина, 23",
     date: "12.05.2025",
     likes: 12,

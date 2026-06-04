@@ -4,16 +4,28 @@
     <div class="login-overlay"></div>
 
     <div class="login-form-container">
-      <form class="login-form" @submit.prevent>
+      <form class="login-form" @submit.prevent="handleLogin">
         <h1 class="form-title">Голос Осетии</h1>
         <p class="form-subtitle">Вход в личный кабинет</p>
 
         <div class="input-group">
-          <input type="email" placeholder="Электронная почта" class="form-input" required />
+          <input 
+            v-model="email" 
+            type="email" 
+            placeholder="Электронная почта" 
+            class="form-input" 
+            required 
+          />
         </div>
 
         <div class="input-group">
-          <input type="password" placeholder="Пароль" class="form-input" required />
+          <input 
+            v-model="password" 
+            type="password" 
+            placeholder="Пароль" 
+            class="form-input" 
+            required 
+          />
         </div>
 
         <div class="form-options">
@@ -31,8 +43,29 @@
 </template>
 
 <script setup>
-</script>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
+
+const email = ref('')
+const password = ref('')
+
+const handleLogin = () => {
+  let userRole = 'user'
+
+  if (email.value.trim() === 'admin@mail.ru') {
+    userRole = 'admin'
+  }
+  localStorage.setItem('user-role', userRole)
+
+  if (userRole === 'admin') {
+    router.push({ name: 'admin' }) 
+  } else {
+    router.push({ name: 'profile' }) 
+  }
+}
+</script>
 
 <style scoped>
 .login-page {
@@ -103,7 +136,6 @@
 
 .form-input {
   width: 100%;
-  
   box-sizing: border-box;
   height: 52px;
   background: rgba(255, 255, 255, 0.15);
@@ -123,7 +155,6 @@
 
 .form-input:focus {
   background: rgba(255, 255, 255, 0.25);
-  
   border-color: #ffffff;
 }
 
