@@ -128,7 +128,7 @@ const resultsData = ref([
 
 <style scoped>
 .results-wrapper {
-  background-color: #efe3d6;
+  background-color: #f1dfcb;
   padding-bottom: 100px;
   min-height: 100vh;
 }
@@ -148,7 +148,7 @@ const resultsData = ref([
 
 .main-title {
   width: 420px;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-weight: 700;
   font-size: 36px;
   line-height: 1.2;
@@ -208,7 +208,7 @@ const resultsData = ref([
 }
 
 .count {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-weight: 700;
   font-size: 32px;
   color: #783f1c;
@@ -216,7 +216,8 @@ const resultsData = ref([
 }
 
 .subtext {
-  font-family: sans-serif;
+  font-family: 'Montserrat';
+  margin-top: -10px;
   font-size: 13px;
   font-weight: 500;
   color: #444;
@@ -225,6 +226,7 @@ const resultsData = ref([
 .info-tags {
   display: flex;
   gap: 20px;
+  font-family: "Montserrat";
   margin-left: auto;
 }
 
@@ -254,7 +256,7 @@ const resultsData = ref([
 }
 
 .info-value {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-size: 18px;
   font-weight: 700;
   color: #386633;
@@ -321,9 +323,9 @@ const resultsData = ref([
 
 .view-details {
   color: white;
-  font-family: sans-serif;
+  font-family: "montserrat";
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   padding: 10px 24px;
   background: rgba(0, 0, 0, 0.7);
   border-radius: 50px;
@@ -341,11 +343,12 @@ const resultsData = ref([
 }
 
 .card-address {
-  font-family: sans-serif;
+  font-family: "Montserrat";
   font-weight: 500;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.5;
   color: #2c3e50;
+  margin-top: -10px;
   margin-bottom: 20px;
   height: 44px;
   display: -webkit-box;
@@ -361,7 +364,7 @@ const resultsData = ref([
 }
 
 .card-category {
-  font-family: sans-serif;
+  font-family: "Montserrat";
   font-size: 12px;
   font-weight: 600;
   background: rgba(52, 103, 53, 0.08);
@@ -370,7 +373,7 @@ const resultsData = ref([
   color: #346735;
 }
 .card-status {
-  font-family: sans-serif;
+  font-family: "Montserrat";
   font-size: 12px;
   font-weight: 700;
   padding: 4px 12px;
@@ -396,23 +399,16 @@ const resultsData = ref([
   background: #825940;
   color: #FFF;
   border: none;
-  border-radius: 16px;
-  font-family: sans-serif;
+  border-radius: 100px;
+  font-family: "Montserrat";
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(130, 89, 64, 0.15);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s ease;
 }
 
 .btn-all:hover {
-  background: #70472e;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(130, 89, 64, 0.3);
-}
-
-.btn-all:active {
-  transform: translateY(0);
+  transform: scale(1.05);
 }
 
 /* Адаптивность */

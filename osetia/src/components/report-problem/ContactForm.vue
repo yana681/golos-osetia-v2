@@ -28,17 +28,20 @@ const submit = () => {
 
 <style scoped>
 .card {
-  background: white;
+  background: #fff9f4;
   border-radius: 20px;
   padding: 24px;
   border: 1px solid #eee;
   box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+  font-family: "Podkova";
 }
 
 .input {
   width: 100%;
+  font-family: "Montserrat";
   box-sizing: border-box;
   margin-top: 16px;
+  margin-bottom: 20px;
   padding: 14px;
   border-radius: 14px;
   border: 1px solid #ddd;
@@ -54,6 +57,7 @@ const submit = () => {
   color: white;
   font-size: 16px;
   cursor: pointer;
+  font-family: "Montserrat";
   transition: 0.2s;
 }
 

@@ -57,6 +57,7 @@ const goToReportProblem = () => {
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300..700;1,300..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pochaevsk&family=Podkova:wght@400..800&family=Poiret+One&display=swap');
 .hero {
   padding: 40px 0;
   background-color: #F1DFCB;
@@ -89,23 +90,24 @@ const goToReportProblem = () => {
 }
 
 .hero-title {
+  margin-top: 50px;
   line-height: 110%;
   max-width: 550px;
 }
 
 .title-bold {
   display: block;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-weight: 700;
   font-size: 64px;
 }
 
 .title-regular {
   display: block;
-  font-family: 'Playfair Display', serif;
-  font-weight: 400;
+  font-family: 'Montserrat', serif;
+  font-weight: 200;
   font-size: 36px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .hero-image {
@@ -114,9 +116,6 @@ const goToReportProblem = () => {
   width: 716px;
   position: absolute;
   right: 0;
-  transform: translateX(-100%);
-  opacity: 0;
-  animation: slideFromLeftToRight 0.8s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
 }
 
 .hero-image img {
@@ -149,12 +148,14 @@ const goToReportProblem = () => {
 
 .footer-left {
   max-width: 600px;
+  margin-left:40px;
+  margin-top: -30px;
 }
 
 .hero-description {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 22px;
-  font-weight: 500;
+  font-weight: 300;
   color: #000;
   line-height: 120%;
   margin-bottom: 30px;
@@ -164,11 +165,12 @@ const goToReportProblem = () => {
   background-color: #825940;
   color: #fff;
   border: none;
+  margin-top: -10px;
   padding: 18px 45px;
   border-radius: 50px;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 20px;
-  font-weight: 500;
+  font-weight: 400;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
@@ -179,16 +181,19 @@ const goToReportProblem = () => {
 
 .stat-value {
   display: block;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Podkova', sans-serif;
   font-size: 48px;
   font-weight: 900;
+  margin-top: -15px;
+  margin-bottom: -10px;
   color: rgba(130, 89, 64, 1);
   line-height: 52px;
 }
 
 .stat-label {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 16px;
+  margin-top: -20px;
   color: #2c1a11;
 }
 
@@ -220,5 +225,7 @@ const goToReportProblem = () => {
 .stat-icon {
   width: 35px;
   height: auto;
+  margin-top: -35px;
+  filter: brightness(0) saturate(100%) invert(66%) sepia(28%) saturate(731%) hue-rotate(82deg) brightness(92%) contrast(90%);
 }
 </style>

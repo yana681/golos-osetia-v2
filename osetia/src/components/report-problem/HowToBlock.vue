@@ -13,8 +13,9 @@
 
 <style scoped>
 .card {
-  background: #f8f8f8;
+  background: #fff9f4;
   border-radius: 20px;
   padding: 24px;
+  font-family: "Montserrat";
 }
 </style>

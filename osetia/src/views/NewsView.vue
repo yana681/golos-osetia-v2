@@ -114,7 +114,7 @@ const openNews = (url) => {
 
 <style scoped>
 .news-page {
-  background-color: #efe3d6;
+  background-color: #f1dfcb;
   min-height: 100vh;
   padding-bottom: 100px;
 }
@@ -134,7 +134,7 @@ const openNews = (url) => {
 }
 
 .news-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-weight: 700;
   font-size: 38px;
   letter-spacing: -0.5px;
@@ -176,7 +176,7 @@ const openNews = (url) => {
   border: none;
   outline: none;
   width: 100%;
-  font-family: sans-serif;
+  font-family: "montserrat";
   font-size: 16px;
   font-weight: 500;
   color: #1a1a1a;
@@ -193,7 +193,7 @@ const openNews = (url) => {
 }
 
 .news-card {
-  background: #FFFFFF;
+  background: #fff9f4;
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 24px; 
   overflow: hidden;
@@ -263,7 +263,7 @@ const openNews = (url) => {
 }
 
 .publish-date {
-  font-family: sans-serif;
+  font-family: "montserrat";
   font-size: 13px;
   font-weight: 600;
   color: #a0a4b5;
@@ -273,9 +273,9 @@ const openNews = (url) => {
 }
 
 .card-headline {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-weight: 700;
-  font-size: 19px;
+  font-size: 14px;
   line-height: 1.4;
   color: #1c1e21; 
   margin: 0 0 16px 0;
@@ -296,7 +296,7 @@ const openNews = (url) => {
   background: none;
   border: none;
   color: #825940; 
-  font-family: sans-serif;
+  font-family: "podkova";
   font-weight: 700;
   font-size: 15px;
   cursor: pointer;
@@ -322,7 +322,7 @@ const openNews = (url) => {
 .empty-news {
   text-align: center;
   padding: 50px 0;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 18px;
   color: #7a7d85;
 }

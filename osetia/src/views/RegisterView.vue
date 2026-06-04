@@ -1,91 +1,33 @@
-<script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
-
-const name = ref('')
-const email = ref('')
-const password = ref('')
-const passwordConfirm = ref('')
-const acceptTerms = ref(false)
-
-const handleRegister = () => {
-  // Базовая проверка совпадения паролей
-  if (password.value !== passwordConfirm.value) {
-    alert('Пароли не совпадают!')
-    return
-  }
-
-  console.log('Регистрация пользователя:', {
-    name: name.value,
-    email: email.value,
-    password: password.value
-  })
-
-  router.push({ name: 'profile' })
-}
-</script>
-
 <template>
   <div class="register-page">
     <div class="register-bg-image"></div>
     <div class="register-overlay"></div>
 
     <div class="register-form-container">
-      <form class="register-form" @submit.prevent="handleRegister">
+      <form class="register-form" @submit.prevent>
         <h1 class="form-title">Голос Осетии</h1>
         <p class="form-subtitle">Создание нового аккаунта</p>
 
         <div class="input-group">
-          <input 
-            v-model="name" 
-            type="text" 
-            placeholder="Имя и фамилия" 
-            class="form-input" 
-            required 
-          />
+          <input type="text" placeholder="Имя и фамилия" class="form-input" required />
         </div>
 
         <div class="input-group">
-          <input 
-            v-model="email" 
-            type="email" 
-            placeholder="Электронная почта" 
-            class="form-input" 
-            required 
-          />
+          <input type="email" placeholder="Электронная почта" class="form-input" required />
         </div>
 
         <div class="password-row">
           <div class="input-group">
-            <input 
-              v-model="password" 
-              type="password" 
-              placeholder="Пароль" 
-              class="form-input" 
-              required 
-            />
+            <input type="password" placeholder="Пароль" class="form-input" required />
           </div>
           <div class="input-group">
-            <input 
-              v-model="passwordConfirm" 
-              type="password" 
-              placeholder="Повторите пароль" 
-              class="form-input" 
-              required 
-            />
+            <input type="password" placeholder="Повторите пароль" class="form-input" required />
           </div>
         </div>
 
         <div class="form-terms">
           <label class="terms-label">
-            <input 
-              v-model="acceptTerms" 
-              type="checkbox" 
-              required 
-              class="terms-checkbox" 
-            />
+            <input type="checkbox" required class="terms-checkbox" />
             <span>Я согласен с <a href="#">условиями использования</a></span>
           </label>
         </div>
@@ -101,6 +43,7 @@ const handleRegister = () => {
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300..700;1,300..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pochaevsk&family=Podkova:wght@400..800&family=Poiret+One&display=swap');
 .register-page {
   width: 100%;
   height: 100vh;
@@ -147,7 +90,7 @@ const handleRegister = () => {
 }
 
 .form-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-weight: 700;
   font-size: 36px;
   color: #ffffff;
@@ -156,7 +99,7 @@ const handleRegister = () => {
 }
 
 .form-subtitle {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 18px;
   color: rgba(255, 255, 255, 0.8);
   text-align: center;
@@ -168,7 +111,6 @@ const handleRegister = () => {
 }
 
 .form-input {
-  box-sizing: border-box;
   width: 100%;     
   height: 50px;
   background: rgba(255, 255, 255, 0.15);
@@ -176,7 +118,7 @@ const handleRegister = () => {
   border-radius: 10px;
   padding: 0 15px;
   color: #fff;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 15px;
   outline: none;
   transition: 0.3s;
@@ -189,7 +131,7 @@ const handleRegister = () => {
 .password-row {
   display: flex;
   justify-content: space-between; 
-  gap: 40px;                   
+  gap: 40px;                      /* Четкий зазор между полями */
   margin-bottom: 18px;
   width: 100%;
 }
@@ -197,7 +139,7 @@ const handleRegister = () => {
 .password-row .input-group {
   flex: 1; 
   margin-bottom: 0; 
-  min-width: 0;   
+  min-width: 0;    /* Важно для корректной работы flexbox с input */
 }
 
 .form-terms {
@@ -211,6 +153,7 @@ const handleRegister = () => {
   color: rgba(255, 255, 255, 0.8);
   font-size: 13px;
   cursor: pointer;
+  font-family: "Montserrat";
 }
 
 .terms-checkbox {
@@ -229,7 +172,7 @@ const handleRegister = () => {
   border: none;
   border-radius: 20px;
   color: #ffffff;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-weight: 700;
   font-size: 18px;
   cursor: pointer;
@@ -245,17 +188,19 @@ const handleRegister = () => {
   text-align: center;
   color: rgba(255, 255, 255, 0.8);
   font-size: 14px;
+  font-family: "montserrat";
 }
 
 .login-link a {
   color: #ffffff;
-  font-weight: 700;
+  font-weight: 500;
   text-decoration: none;
 }
 
+/* --- АДАПТИВНОСТЬ: Перестроение полей на мобильных --- */
 @media (max-width: 480px) {
   .password-row {
-    flex-direction: column;
+    flex-direction: column; /* Поля встают друг под друга */
     gap: 10px;
   }
 }

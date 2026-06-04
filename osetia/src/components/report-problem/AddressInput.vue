@@ -22,9 +22,10 @@ watch(address, v => emit('update', v))
 
 <style scoped>
 .card {
-  background: white;
+  background: #fff9f4;
   border-radius: 20px;
   padding: 24px;
+  font-family: "Podkova";
   border: 1px solid #eee;
   box-shadow: 0 6px 20px rgba(0,0,0,0.04);
 }
@@ -37,6 +38,7 @@ watch(address, v => emit('update', v))
   border-radius: 14px;
   border: 1px solid #ddd;
   outline: none;
+  font-family: "Montserrat";
 }
 
 .input:focus {

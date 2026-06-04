@@ -27,11 +27,12 @@ watch(text, (val) => {
 
 <style scoped>
 .card {
-  background: white;
+  background: #fff9f4;
   border-radius: 20px;
   padding: 24px;
   border: 1px solid #eee;
   box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+  font-family: "podkova";
 }
 
 .textarea {
@@ -43,6 +44,7 @@ watch(text, (val) => {
   border: 1px solid #ddd;
   padding: 14px;
   outline: none;
+  font-family: "Montserrat";
 }
 
 .textarea:focus {
@@ -53,5 +55,6 @@ watch(text, (val) => {
   margin-top: 10px;
   font-size: 12px;
   color: #888;
+  font-family: "Montserrat";
 }
 </style>

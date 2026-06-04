@@ -53,6 +53,7 @@ import NextStepsBlock from '../components/report-problem/NextStepsBlock.vue'
 <style scoped>
 .report-page {
   padding: 40px 0;
+  background-color: #f1dfcb;
 }
 
 .container {
@@ -62,6 +63,7 @@ import NextStepsBlock from '../components/report-problem/NextStepsBlock.vue'
 
 .title {
   margin-bottom: 30px;
+  font-family: "Podkova";
 }
 
 .report-layout {

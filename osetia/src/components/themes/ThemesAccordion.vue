@@ -158,7 +158,7 @@ onMounted(() => {
   border: none;
   outline: none;
   width: 100%;
-  font-family: 'Playfair Display', serif; 
+  font-family: 'Montserrat', serif; 
   font-weight: 400;
   font-size: 16px;
   line-height: 100%;
@@ -170,14 +170,14 @@ onMounted(() => {
 }
 
 .accordion-list {
-  background-color: #efe3d6; 
+  background-color: #F1DFCB; 
 }
 
 .accordion-item {
   border: 1px solid rgba(52, 103, 50, 1); 
-  background-color: #efe3d6; 
+  background-color: #F1DFCB; 
   margin-top: -1px; 
-  transition: background-color 0.2s;
+  transition: 0.2s;
 }
 
 .accordion-item.is-active {
@@ -211,7 +211,7 @@ onMounted(() => {
 }
 
 .category-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 20px;
   font-weight: 400;
   color: #000;
@@ -229,7 +229,7 @@ onMounted(() => {
 }
 
 .item-content {
-  background-color: #ffffff;
+  background-color:#f7ede2;
   border-top: 1px solid rgba(52, 103, 50, 0.3);
   padding: 15px 25px 20px 68px; 
 }
@@ -267,6 +267,7 @@ onMounted(() => {
 .subtheme-text {
   font-family: sans-serif;
   font-size: 16px;
+  font-family: "Montserrat";
   color: #333333;
   line-height: 1.4;
 }

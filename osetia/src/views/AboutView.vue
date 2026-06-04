@@ -58,8 +58,8 @@
 
 <style scoped>
 .about-page {
-  background-color: #efe3d6;
-  min-height: 100vh;
+  background-color: #f1dfcb;
+  min-height: 900px;
   padding-bottom: 100px;
 }
 
@@ -75,7 +75,7 @@
 }
 
 .page-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-weight: 700;
   font-size: 48px;
   color: #000;
@@ -83,7 +83,7 @@
 }
 
 .hero-subtitle {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 20px;
   color: rgba(52, 103, 53, 1);
   max-width: 600px;
@@ -97,14 +97,15 @@
 }
 
 .section-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-size: 32px;
+  margin-top: -5px;
   margin-bottom: 20px;
   color: #000;
 }
 
 .text-p {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 18px;
   line-height: 1.6;
   color: #333;
@@ -113,26 +114,27 @@
 .features-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  margin-top: -30px;
   gap: 20px;
 }
 
 .feature-card {
-  background: #FFFFFF;
+  background-color: #fff9f4;
   border: 1px solid rgba(52, 103, 53, 0.3);
   border-radius: 10px;
   padding: 25px;
 }
 
 .feature-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'podkova', serif;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 25px;
   color: rgba(120, 63, 28, 1);
   margin-bottom: 15px;
 }
 
 .feature-text {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 16px;
   color: #555;
   line-height: 1.4;
@@ -147,7 +149,8 @@
   justify-content: center;
   align-items: center;
   gap: 80px;
-  margin-top: 40px;
+  margin-top: -10px;
+  margin-bottom: -100px;
 }
 
 .stat-item {
@@ -168,7 +171,7 @@
 }
 
 .stat-number {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-weight: 700;
   font-size: 42px;
   line-height: 1;
@@ -176,10 +179,10 @@
 }
 
 .stat-label {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 16px;
   color: #000;
-  margin-top: 5px;
+  margin-top: -5px;
 }
 
 .stat-divider {

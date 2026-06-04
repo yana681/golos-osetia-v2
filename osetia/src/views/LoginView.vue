@@ -4,28 +4,16 @@
     <div class="login-overlay"></div>
 
     <div class="login-form-container">
-      <form class="login-form" @submit.prevent="handleLogin">
+      <form class="login-form" @submit.prevent>
         <h1 class="form-title">Голос Осетии</h1>
         <p class="form-subtitle">Вход в личный кабинет</p>
 
         <div class="input-group">
-          <input 
-            v-model="email" 
-            type="email" 
-            placeholder="Электронная почта" 
-            class="form-input" 
-            required 
-          />
+          <input type="email" placeholder="Электронная почта" class="form-input" required />
         </div>
 
         <div class="input-group">
-          <input 
-            v-model="password" 
-            type="password" 
-            placeholder="Пароль" 
-            class="form-input" 
-            required 
-          />
+          <input type="password" placeholder="Пароль" class="form-input" required />
         </div>
 
         <div class="form-options">
@@ -43,29 +31,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
-
-const email = ref('')
-const password = ref('')
-
-const handleLogin = () => {
-  let userRole = 'user'
-
-  if (email.value.trim() === 'admin@mail.ru') {
-    userRole = 'admin'
-  }
-  localStorage.setItem('user-role', userRole)
-
-  if (userRole === 'admin') {
-    router.push({ name: 'admin' }) 
-  } else {
-    router.push({ name: 'profile' }) 
-  }
-}
 </script>
+
 
 <style scoped>
 .login-page {
@@ -104,6 +71,7 @@ const handleLogin = () => {
   position: relative;
   width: 100%;
   max-width: 420px;
+  /* фон с размытием (Glassmorphism) */
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -114,7 +82,7 @@ const handleLogin = () => {
 }
 
 .form-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-weight: 700;
   font-size: 36px;
   color: #ffffff;
@@ -123,7 +91,7 @@ const handleLogin = () => {
 }
 
 .form-subtitle {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 18px;
   color: rgba(255, 255, 255, 0.8);
   text-align: center;
@@ -136,14 +104,13 @@ const handleLogin = () => {
 
 .form-input {
   width: 100%;
-  box-sizing: border-box;
   height: 52px;
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 10px;
   padding: 0 15px;
   color: #fff;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 16px;
   outline: none;
   transition: 0.3s;
@@ -161,6 +128,7 @@ const handleLogin = () => {
 .form-options {
   text-align: right;
   margin-bottom: 30px;
+  font-family: "montserrat";
 }
 
 .forgot-link {
@@ -176,8 +144,8 @@ const handleLogin = () => {
   border: none;
   border-radius: 20px;
   color: #ffffff;
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
+  font-family: 'Montserrat', serif;
+  font-weight: 500;
   font-size: 18px;
   cursor: pointer;
   transition: 0.3s;
@@ -192,11 +160,12 @@ const handleLogin = () => {
   text-align: center;
   color: rgba(255, 255, 255, 0.8);
   font-size: 14px;
+  font-family: "Montserrat";
 }
 
 .register-link a {
   color: #ffffff;
-  font-weight: 700;
+  font-weight: 500;
   text-decoration: none;
 }
 </style>

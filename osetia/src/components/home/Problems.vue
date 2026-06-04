@@ -79,7 +79,7 @@ const problems = [
 }
 
 .section-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-size: 48px;
   font-weight: 700;
   color: #000;
@@ -87,7 +87,7 @@ const problems = [
 }
 
 .all-themes {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 20px;
   color: rgba(52, 103, 53, 1);
   text-decoration: underline;
@@ -124,17 +124,17 @@ const problems = [
 }
 
 .card-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-size: 24px;
   font-weight: 700;
   margin: 0;
 }
 
 .card-text {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 20px;
   line-height: 30px;
-  font-weight: 500;
+  font-weight: 300px;
   opacity: 0.9;
 }
 
@@ -146,11 +146,14 @@ const problems = [
 }
 
 .problem-count {
-  border: 1px solid #fff;
+  border: 1px solid rgba(52, 103, 53, 1);
   padding: 8px 20px;
   border-radius: 50px;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-size: 16px;
+  font-weight: 800;
+  color:rgba(52, 103, 53, 1);
+  background-color: #fff;
 }
 
 .arrow-btn {
@@ -158,6 +161,7 @@ const problems = [
   border: none;
   cursor: pointer;
   padding: 0;
+  filter: brightness(0) invert(1);
 }
 
 .arrow-btn img {

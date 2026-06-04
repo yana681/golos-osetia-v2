@@ -34,7 +34,8 @@
 
 <style scoped>
 .subscribe {
-  padding: 80px 0;background-color: #F1DFCB;
+  padding: 80px 0;
+  background-color: #F1DFCB;
 }
 
 .container {
@@ -77,7 +78,7 @@
 }
 
 .banner-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-size: 32px;
   font-weight: 700;
   color: #ffffff;
@@ -85,11 +86,12 @@
 }
 
 .banner-text {
-  font-family: 'Playfair Display', serif;
-  font-size: 20px;
+  font-family: 'Montserrat', serif;
+  font-size: 18px;
   color: #ffffff;
   line-height: 1.2;
   margin: 0;
+  font-weight: 200;
   max-width: 337px;
 }
 
@@ -108,7 +110,7 @@
   border: none;
   background: none;
   padding: 0 30px;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 18px;
   outline: none;
 }
@@ -119,7 +121,7 @@
   background-color: rgba(120, 63, 28, 1);
   color: #ffffff;
   border: none;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-size: 20px;
   font-weight: 700;
   cursor: pointer;

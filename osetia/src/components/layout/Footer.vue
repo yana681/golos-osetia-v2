@@ -74,7 +74,7 @@
 }
 
 .footer-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Podkova', sans-serif;
   font-size: 24px;
   font-weight: 600;
   line-height: 42px;
@@ -87,14 +87,15 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  margin-top: -10px;
 }
 
 .footer-links a {
   color: #ffffff;
   text-decoration: none;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Montserrat', serif;
   font-size: 18px;
+  margin-top: -10px;
   opacity: 0.8;
   transition: opacity 0.3s;
 }
@@ -132,9 +133,10 @@
 
 .footer-bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.2);
-  padding-top: 20px;
+  padding-top: 2px;
+  margin-bottom: -30px;
   text-align: center;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   opacity: 0.6;
 }

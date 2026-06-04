@@ -49,7 +49,8 @@ const steps = [
 
 <style scoped>
 .steps {
-  padding: 80px 0;background-color: #F1DFCB;
+  padding: 30px 0;
+  background-color: #F1DFCB;
   border-top: 2px solid rgba(52, 103, 50, 1); 
 }
 
@@ -60,7 +61,7 @@ const steps = [
 }
 
 .steps-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-size: 48px;
   font-weight: 700;
   margin-bottom: 60px;
@@ -95,8 +96,8 @@ const steps = [
 }
 
 .step-number {
-  font-family: 'Playfair Display', serif;
-  font-size: 64px;
+  font-family: 'Podkova', serif;
+  font-size: 80px;
   font-weight: 700;
   color: #fff;
   line-height: 0; 
@@ -112,19 +113,21 @@ const steps = [
 }
 
 .step-header {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-size: 20px;
   font-weight: 700;
-  margin: 0;
+  margin-top: -5px;
   color: #000;
 }
 
 .step-text {
-  font-family: 'Playfair Display', serif;
-  font-size: 16px; 
+  font-family: 'Montserrat', serif;
+  font-size: 14px; 
   line-height: 1.2;
   color: #000;
-  margin: 0;
+  margin-top: -18px;
   opacity: 0.9;
+  width: 175px;
 }
+
 </style>

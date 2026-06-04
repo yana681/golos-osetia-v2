@@ -97,7 +97,7 @@ const goToThemesAccordion = (topicId) => {
 }
 
 .page-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Podkova', serif;
   font-size: 54px;
   font-weight: 500;
   margin: 0;
@@ -109,6 +109,7 @@ const goToThemesAccordion = (topicId) => {
   font-size: 14px;
   color: #2b2b2b;
   margin: 0;
+  font-family: "Montserrat";
   padding-bottom: 10px;
   max-width: 500px;
   text-align: right;
@@ -116,7 +117,7 @@ const goToThemesAccordion = (topicId) => {
 .map-container {
   width: 100%;
   box-sizing: border-box;
-  background-color: #efe3d6;
+  background-color: #F1DFCB;
 }
 
 .map-wrapper {
@@ -149,7 +150,7 @@ const goToThemesAccordion = (topicId) => {
   color: #fff;
   padding: 6px 16px;
   border-radius: 8px;
-  font-family: sans-serif;
+  font-family: "Montserrat";
   font-size: 14px;
   font-weight: 400;
   white-space: nowrap;

@@ -14,7 +14,7 @@ import ThemesAccordion from '../components/themes/ThemesAccordion.vue'
 
 <style scoped>
 .themes-page {
-  background-color: #efe3d6; 
+  background-color: #F1DFCB; 
   min-height: 100vh;
 }
 .container {

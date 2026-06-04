@@ -57,10 +57,11 @@
 }
 
 .logo-text {
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: 24px;
-  color: #721e1e;
+  font-family: 'Podkova', serif;
+  font-weight: 900;
+  line-height: 16px;
+  font-size: 32px;
+  color: #783F1C;
   text-transform: none;
   text-decoration: none; 
 }
@@ -68,16 +69,17 @@
 .nav {
   display: flex;
   gap: 25px;
+  margin-left: 275px;
 }
 
 .nav-link {
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
+  font-family: 'Montserrat', serif;
+  font-weight: 600;
   font-size: 20px;
   line-height: 16px;
   text-transform: uppercase;
   text-decoration: none;
-  color: #721e1e;
+  color: #783F1C;
   transition: opacity 0.3s;
 }
 
@@ -93,6 +95,7 @@
 
 .action-btn {
   background: none;
+  filter: brightness(0) saturate(100%) invert(27%) sepia(42%) saturate(1319%) hue-rotate(350deg) brightness(96%) contrast(90%);
   border: none;
   cursor: pointer;
   padding: 0;
@@ -107,8 +110,8 @@
 }
 
 .header-icon {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
 }
 </style>

@@ -11,7 +11,7 @@
         @change="onFileChange"
       />
 
-      <p>📷 Нажмите для загрузки фото</p>
+      <p class="desc">📷 Нажмите для загрузки фото</p>
     </div>
   </div>
 </template>
@@ -33,11 +33,15 @@ const onFileChange = (e) => {
 
 <style scoped>
 .card {
-  background: white;
+  background: #fff9f4;
   border-radius: 20px;
   padding: 24px;
   border: 1px solid #eee;
   box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+  font-family: "Podkova";
+}
+.desc{
+  font-family: "Montserrat";
 }
 
 .upload-box {

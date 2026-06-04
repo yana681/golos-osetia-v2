@@ -63,10 +63,11 @@ export default {
 
 <style scoped>
 .card {
-  background: white;
+  background: #fff9f4;
   border-radius: 20px;
   padding: 24px;
   border: 1px solid #eee;
+  font-family: "Podkova";
 }
 
 .categories {
@@ -82,6 +83,7 @@ export default {
   border: 1px solid #ddd;
   background: white;
   cursor: pointer;
+  font-family: "Montserrat";
   transition: 0.2s;
 }
 
