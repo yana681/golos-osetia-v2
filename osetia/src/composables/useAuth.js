@@ -31,6 +31,9 @@ export function useAuth() {
       if (response.success) {
         user.value = response.user;
         isAuthenticated.value = true;
+        
+        // Сохраняем пользователя в localStorage (опционально)
+        localStorage.setItem('user', JSON.stringify(response.user));
       }
       return response;
     } catch (err) {
@@ -48,6 +51,7 @@ export function useAuth() {
       await authService.logout();
       user.value = null;
       isAuthenticated.value = false;
+      localStorage.removeItem('user');
     } catch (err) {
       error.value = err.message;
     } finally {
