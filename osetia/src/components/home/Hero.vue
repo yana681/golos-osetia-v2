@@ -1,12 +1,24 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
 
 const router = useRouter()
+const isAuthenticated = ref(false)
+
+onMounted(() => {
+  const user = localStorage.getItem('user')
+  isAuthenticated.value = !!user
+})
 
 const goToReportProblem = () => {
-  router.push('/report-problem')
+  if (isAuthenticated.value) {
+    router.push('/report-problem')
+  } else {
+    router.push('/login')
+  }
 }
 </script>
+
 <template>
   <section class="hero">
     <div class="container">
@@ -27,7 +39,7 @@ const goToReportProblem = () => {
           <p class="hero-description">
             Вы сообщаете о проблемах, мы разбираемся и придаем огласке. Вместе делаем город лучше!
           </p>
-            <button
+          <button
             class="cta-button"
             @click="goToReportProblem"
           >
@@ -58,6 +70,7 @@ const goToReportProblem = () => {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300..700;1,300..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pochaevsk&family=Podkova:wght@400..800&family=Poiret+One&display=swap');
+
 .hero {
   padding: 40px 0;
   background-color: #F1DFCB;
@@ -123,20 +136,6 @@ const goToReportProblem = () => {
   height: 100%;
   object-fit: cover;
   object-position: top;
-}
-
-@keyframes slideFromLeftToRight {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
 }
 
 .hero-footer {

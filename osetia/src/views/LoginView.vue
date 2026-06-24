@@ -74,10 +74,8 @@ const handleLogin = async () => {
     });
 
     if (response.success) {
-      // ✅ Сохраняем данные пользователя в localStorage
       localStorage.setItem('user', JSON.stringify(response.user));
       
-      // ✅ Проверяем роль и перенаправляем
       if (response.user.role === 'admin') {
         router.push("/admin");
       } else {

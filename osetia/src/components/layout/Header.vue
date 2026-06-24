@@ -7,7 +7,6 @@
       </div>
 
       <nav class="nav">
-        <a href="#" class="nav-link">Карта</a>
         <router-link to="/themes" class="nav-link">Темы</router-link>
         <router-link to="/results" class="nav-link">Результаты</router-link>
         <router-link to="/news" class="nav-link">Новости</router-link>
@@ -18,11 +17,11 @@
         <button class="action-btn">
           <img src="/src/assets/icons/search-header.png" alt="Поиск" class="header-icon" />
         </button>
-        <button class="action-btn">
+        
+        <button class="action-btn" @click="handleFavorites">
           <img src="/src/assets/icons/save-header.png" alt="Избранные" class="header-icon" />
         </button>
         
-        <!-- ✅ Изменяем ссылку в зависимости от роли -->
         <template v-if="isAuthenticated">
           <router-link v-if="isAdmin" to="/admin" class="action-btn admin-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -42,8 +41,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const isAuthenticated = ref(false)
 const isAdmin = ref(false)
 
@@ -59,6 +60,14 @@ onMounted(() => {
     }
   }
 })
+
+const handleFavorites = () => {
+  if (isAuthenticated.value) {
+    router.push('/profile?tab=favorites')
+  } else {
+    router.push('/login')
+  }
+}
 </script>
 
 <style scoped>

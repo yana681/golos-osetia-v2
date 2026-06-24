@@ -24,13 +24,13 @@ const router = createRouter({
 			path: '/profile',
 			name: 'profile',
 			component: UserProfileView,
-			beforeEnter: [requireAuth, preventAdminAccess], // ✅ Запрещаем админам
+			beforeEnter: [requireAuth, preventAdminAccess],
 		},
 		{
 			path: '/admin',
 			name: 'admin',
 			component: AdminView,
-			beforeEnter: requireAdmin, // ✅ Только для администраторов
+			beforeEnter: requireAdmin,
 		},
 		{
 			path: '/report-problem',

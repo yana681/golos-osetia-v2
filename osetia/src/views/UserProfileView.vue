@@ -20,7 +20,6 @@ onMounted(() => {
     try {
       const parsedUser = JSON.parse(storedUser)
       
-      // ✅ Проверяем - если админ, перенаправляем в админ-панель
       if (parsedUser.role === 'admin') {
         router.push('/admin')
         return

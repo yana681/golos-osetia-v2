@@ -3,7 +3,7 @@
     <div class="container">
       <div class="problems-header">
         <h2 class="section-title">Актуальные проблемы</h2>
-        <a href="#" class="all-themes">все темы</a>
+        <a href="#" class="all-themes" @click.prevent="goToThemes">все темы</a>
       </div>
 
       <div class="problems-grid">
@@ -20,7 +20,7 @@
             <div class="problem-count">
               {{ problem.count }} проблем
             </div>
-            <button class="arrow-btn">
+            <button class="arrow-btn" @click="goToProblem(problem.title)">
               <img src="/src/assets/icons/right-arrow.png" alt="Подробнее" />
             </button>
           </div>
@@ -31,6 +31,10 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
 const problems = [
   {
     title: 'Мой двор',
@@ -56,12 +60,26 @@ const problems = [
     count: 100,
     icon: '/src/assets/icons/flower.png'
   }
-];
+]
+
+const goToThemes = () => {
+  router.push('/themes')
+}
+
+const goToProblem = (title) => {
+  const user = localStorage.getItem('user')
+  if (user) {
+    router.push('/themes')
+  } else {
+    router.push('/login')
+  }
+}
 </script>
 
 <style scoped>
 .problems {
-  padding: 60px 0;background-color: #F1DFCB;
+  padding: 60px 0;
+  background-color: #F1DFCB;
   border-top: 2px solid rgba(97, 173, 99, 1);
 }
 
@@ -91,6 +109,7 @@ const problems = [
   font-size: 20px;
   color: rgba(52, 103, 53, 1);
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .problems-grid {
@@ -110,6 +129,7 @@ const problems = [
   color: #fff;
   box-sizing: border-box; 
 }
+
 .card-title-wrapper {
   display: flex;
   align-items: center;
@@ -152,7 +172,7 @@ const problems = [
   font-family: 'Podkova', serif;
   font-size: 16px;
   font-weight: 800;
-  color:rgba(52, 103, 53, 1);
+  color: rgba(52, 103, 53, 1);
   background-color: #fff;
 }
 

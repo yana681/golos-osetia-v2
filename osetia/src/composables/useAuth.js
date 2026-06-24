@@ -32,11 +32,7 @@ export function useAuth() {
       if (response.success) {
         user.value = response.user;
         isAuthenticated.value = true;
-        
-        // Сохраняем пользователя в localStorage
         localStorage.setItem('user', JSON.stringify(response.user));
-        
-        // ✅ Проверяем, является ли пользователь администратором
         await checkAdminStatus();
       }
       return response;
@@ -48,13 +44,11 @@ export function useAuth() {
     }
   };
 
-  // ✅ Новая функция для проверки статуса администратора
   const checkAdminStatus = async () => {
     try {
       const response = await authService.checkAdminRole();
       if (response.success) {
         isAdmin.value = response.isAdmin;
-        // Сохраняем роль в localStorage
         const userData = JSON.parse(localStorage.getItem('user') || '{}');
         userData.role = response.role;
         localStorage.setItem('user', JSON.stringify(userData));
@@ -82,14 +76,12 @@ export function useAuth() {
   };
 
   const checkAuth = async () => {
-    // Сначала проверяем localStorage
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
         user.value = parsedUser;
         isAuthenticated.value = true;
-        // Проверяем роль
         if (parsedUser.role === 'admin') {
           isAdmin.value = true;
         } else {
@@ -101,7 +93,6 @@ export function useAuth() {
       }
     }
 
-    // Если в localStorage нет, проверяем через API
     loading.value = true;
     try {
       const response = await authService.checkAuth();
@@ -144,14 +135,11 @@ export function useAuth() {
   };
 
   return {
-    // Состояние
     user,
     isAuthenticated,
     isAdmin,
     loading,
     error,
-
-    // Методы
     register,
     login,
     logout,

@@ -1,4 +1,3 @@
-// src/router/guards.js
 export function requireAuth(to, from, next) {
   const user = localStorage.getItem('user');
   
@@ -15,7 +14,6 @@ export function redirectIfAuth(to, from, next) {
   if (user) {
     try {
       const userData = JSON.parse(user);
-      // ✅ Если админ - перенаправляем в админ-панель
       if (userData.role === 'admin') {
         next('/admin');
       } else {
@@ -29,7 +27,6 @@ export function redirectIfAuth(to, from, next) {
   }
 }
 
-// ✅ Проверка на администратора
 export function requireAdmin(to, from, next) {
   const user = localStorage.getItem('user');
   
@@ -44,7 +41,6 @@ export function requireAdmin(to, from, next) {
     if (userData.role === 'admin') {
       next();
     } else {
-      // Если не админ - перенаправляем на профиль
       next('/profile');
     }
   } catch (e) {
@@ -53,7 +49,6 @@ export function requireAdmin(to, from, next) {
   }
 }
 
-// ✅ Новый guard - запрещает доступ админам к странице профиля
 export function preventAdminAccess(to, from, next) {
   const user = localStorage.getItem('user');
   
@@ -66,7 +61,6 @@ export function preventAdminAccess(to, from, next) {
     const userData = JSON.parse(user);
     
     if (userData.role === 'admin') {
-      // Если админ пытается зайти на страницу профиля - перенаправляем в админ-панель
       next('/admin');
     } else {
       next();
