@@ -17,6 +17,7 @@
           :key="item.id" 
           class="accordion-item"
           :class="{ 'is-active': activeId === item.id }"
+          :ref="el => { if (el) accordionRefs[item.id] = el }"
         >
           <div class="item-header" @click="toggleAccordion(item.id)">
             <div class="category-info">
@@ -46,12 +47,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
+
+// ✅ Принимаем prop от родителя
+const props = defineProps({
+  topicId: {
+    type: Number,
+    default: null
+  }
+})
+
 const activeId = ref(null)
 const searchQuery = ref('')
+const accordionRefs = ref({})
 
 const themes = [
   { 
@@ -99,29 +110,57 @@ const filteredThemes = computed(() => {
     theme.subthemes.some(sub => sub.toLowerCase().includes(searchQuery.value.toLowerCase()))
   )
 })
+
 const toggleAccordion = (id) => {
   activeId.value = activeId.value === id ? null : id
+}
+
+// ✅ Функция для открытия раздела по ID
+const openTopic = (topicId) => {
+  console.log('🟠 Открываем тему с ID:', topicId)
+  
+  const topic = themes.find(t => t.id === topicId)
+  if (topic) {
+    activeId.value = topicId
+    
+    nextTick(() => {
+      const element = accordionRefs.value[topicId]
+      if (element) {
+        const offset = 120
+        const elementPosition = element.getBoundingClientRect().top
+        const offsetPosition = elementPosition + window.pageYOffset - offset
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        })
+      }
+    })
+  } else {
+    console.warn('⚠️ Тема с ID', topicId, 'не найдена')
+  }
 }
 
 const selectSubtheme = (category, subtheme) => {
   console.log(`Выбрана категория: ${category}, подтема: ${subtheme}`)
 }
+
+// ✅ Следим за изменением prop от родителя
+watch(() => props.topicId, (newId) => {
+  if (newId) {
+    console.log('🟡 Получен новый ID от родителя:', newId)
+    openTopic(newId)
+  }
+}, { immediate: true })
+
+// ✅ Также проверяем URL параметр при загрузке
 onMounted(() => {
   const queryTopic = route.query.topic
   
   if (queryTopic) {
     const topicIdNum = parseInt(queryTopic, 10)
-    const found = themes.find(t => t.id === topicIdNum)
-    
-    if (found) {
-      activeId.value = found.id
-      setTimeout(() => {
-        const activeElement = document.querySelector('.accordion-item.is-active')
-        if (activeElement) {
-          activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        }
-      }, 300)
-    }
+    console.log('🔴 Получен ID из URL:', topicIdNum)
+    openTopic(topicIdNum)
   }
 })
 </script>
@@ -224,6 +263,7 @@ onMounted(() => {
   display: inline-block;
   transition: transform 0.2s ease; 
 }
+
 .arrow-rotated {
   transform: rotate(180deg);
 }

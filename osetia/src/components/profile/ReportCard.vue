@@ -15,7 +15,7 @@
       </div>
 
       <div class="card-footer">
-        <div class="likes">👍 {{ likes }}</div>
+        <div class="likes">❤ {{ likes }}</div>
         <button class="details-btn">Подробнее ➔</button>
       </div>
     </div>
@@ -62,16 +62,18 @@ defineProps({
   position: absolute;
   top: 15px;
   left: 15px;
-  padding: 6px 14px;
-  border-radius: 8px;
+  padding: 2px 15px;
+  border-radius: 100px;
   font-size: 12px;
   font-weight: 600;
+  font-family: "montserrat";
   color: white;
 }
 
 .status-badge.checking { background: #e09943; } /* На проверке - оранжевый */
 .status-badge.in-progress { background: #2f80ed; } /* В работе - синий */
 .status-badge.resolved { background: #27ae60; } /* Решено - зеленый */
+.status-badge.rejected { background: #e93737;} /*отклонено - красный*/
 
 .content {
   padding: 20px;
@@ -85,12 +87,14 @@ defineProps({
   font-size: 16px;
   color: #2c3e29;
   font-weight: 600;
+  font-family: "montserrat";
   line-height: 1.4;
 }
 
 .description {
-  margin: 0 0 15px 0;
+  margin: 0 0 1px 0;
   font-size: 13px;
+  font-family: "montserrat";
   color: #7a8a77;
   line-height: 1.5;
   flex-grow: 1;
@@ -100,22 +104,25 @@ defineProps({
   display: flex;
   gap: 15px;
   font-size: 12px;
+  font-family: "Montserrat";
   color: #90a08d;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   border-bottom: 1px solid #f0f4ef;
-  padding-bottom: 12px;
+  padding-bottom: 15px;
 }
 
 .card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 5px;
 }
 
 .likes {
   font-size: 14px;
   color: #556352;
   font-weight: 500;
+  font-family: "montserrat";
 }
 
 .details-btn {
@@ -124,6 +131,7 @@ defineProps({
   color: #4a6b41;
   font-weight: 600;
   font-size: 13px;
+  font-family: "Montserrat";
   cursor: pointer;
   padding: 0;
 }

@@ -64,10 +64,12 @@ const tags = [
   border-radius: 20px;
   padding: 10px 20px;
   font-size: 14px;
+  font-family: "Montserrat";
   color: #556352;
   cursor: pointer;
   transition: 0.2s;
   font-weight: 500;
+  height: 300;
 }
 
 .tag-btn.active {

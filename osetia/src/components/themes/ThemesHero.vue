@@ -22,7 +22,7 @@
             :key="topic.id"
             class="map-label" 
             :style="{ top: topic.position.top, left: topic.position.left }"
-            @click="goToThemesAccordion(topic.id)"
+            @click="selectTopic(topic.id)"
           >
             <div class="label-text">{{ topic.title }}</div>
             <div class="label-line"></div>
@@ -36,43 +36,42 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 
-const router = useRouter()
+// ✅ Правильный emit
+const emit = defineEmits(['select-topic'])
 
 const problemTopics = ref([
   {
-    id: 4, // Соответствует 'Государственные учреждения'
+    id: 4,
     title: 'Государственные учреждения',
     position: { top: '48%', left: '28.5%' }
   },
   {
-    id: 3, // Соответствует 'Моя дорога'
+    id: 3,
     title: 'Дороги',
     position: { top: '53.5%', left: '50.7%' }
   },
   {
-    id: 5, // Соответствует 'Общественный транспорт'
+    id: 5,
     title: 'Общественный транспорт',
     position: { top: '78.5%', left: '43.5%' }
   },
   {
-    id: 2, // Соответствует 'Мой дом'
+    id: 2,
     title: 'Мой Дом',
     position: { top: '39.5%', left: '73.2%' }
   },
   {
-    id: 6, // Соответствует 'Городская территория'
+    id: 6,
     title: 'Городская территория',
     position: { top: '61.5%', left: '83.7%' }
   }
 ])
 
-const goToThemesAccordion = (topicId) => {
-  router.push({
-    path: '/themes-accordion',
-    query: { topic: topicId }
-  })
+// ✅ Функция для обработки клика
+const selectTopic = (id) => {
+  console.log('🟢 Клик по метке с ID:', id)
+  emit('select-topic', id)
 }
 </script>
 
@@ -114,6 +113,7 @@ const goToThemesAccordion = (topicId) => {
   max-width: 500px;
   text-align: right;
 }
+
 .map-container {
   width: 100%;
   box-sizing: border-box;
@@ -130,6 +130,7 @@ const goToThemesAccordion = (topicId) => {
   height: auto;
   display: block;
 }
+
 .map-label {
   position: absolute;
   display: flex;

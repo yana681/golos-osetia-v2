@@ -4,24 +4,58 @@
     <div class="register-overlay"></div>
 
     <div class="register-form-container">
-      <form class="register-form" @submit.prevent>
+      <form class="register-form" @submit.prevent="handleSubmit">
         <h1 class="form-title">Голос Осетии</h1>
         <p class="form-subtitle">Создание нового аккаунта</p>
 
-        <div class="input-group">
-          <input type="text" placeholder="Имя и фамилия" class="form-input" required />
+        <!-- Сообщение об успехе -->
+        <div v-if="successMessage" class="success-message">
+          {{ successMessage }}
+        </div>
+
+        <!-- Сообщение об ошибке -->
+        <div v-if="auth.error.value" class="error-message">
+          {{ auth.error.value }}
         </div>
 
         <div class="input-group">
-          <input type="email" placeholder="Электронная почта" class="form-input" required />
+          <input
+            type="text"
+            placeholder="Имя и фамилия"
+            class="form-input"
+            v-model="form.username"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="email"
+            placeholder="Электронная почта"
+            class="form-input"
+            v-model="form.email"
+            required
+          />
         </div>
 
         <div class="password-row">
           <div class="input-group">
-            <input type="password" placeholder="Пароль" class="form-input" required />
+            <input
+              type="password"
+              placeholder="Пароль"
+              class="form-input"
+              v-model="form.password"
+              required
+            />
           </div>
           <div class="input-group">
-            <input type="password" placeholder="Повторите пароль" class="form-input" required />
+            <input
+              type="password"
+              placeholder="Повторите пароль"
+              class="form-input"
+              v-model="form.passwordConfirm"
+              required
+            />
           </div>
         </div>
 
@@ -32,7 +66,9 @@
           </label>
         </div>
 
-        <button type="submit" class="register-btn">Зарегистрироваться</button>
+        <button type="submit" class="register-btn" :disabled="auth.loading.value">
+          {{ auth.loading.value ? 'Регистрация...' : 'Зарегистрироваться' }}
+        </button>
 
         <div class="login-link">
           Уже есть аккаунт? <router-link to="/login">Войти</router-link>
@@ -42,8 +78,67 @@
   </div>
 </template>
 
+<script setup>
+import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { useAuth } from "../composables/useAuth";
+
+const router = useRouter();
+const auth = useAuth();
+const successMessage = ref("");
+
+const form = reactive({
+  username: "",
+  email: "",
+  password: "",
+  passwordConfirm: "",
+});
+
+const handleSubmit = async () => {
+  auth.clearError();
+  successMessage.value = "";
+
+  if (form.password !== form.passwordConfirm) {
+    auth.error.value = "Пароли не совпадают";
+    return;
+  }
+
+  if (form.username.length < 3) {
+    auth.error.value = "Имя пользователя должно быть минимум 3 символа";
+    return;
+  }
+
+  try {
+    const response = await auth.register({
+      username: form.username,
+      email: form.email,
+      password: form.password,
+    });
+
+    successMessage.value = "Регистрация успешна! Сейчас вы будете перенаправлены на страницу входа...";
+
+    // Очищаем форму
+    Object.assign(form, {
+      username: "",
+      email: "",
+      password: "",
+      passwordConfirm: "",
+    });
+
+    // ✅ Перенаправляем на страницу входа через 2 секунды
+    setTimeout(() => {
+      router.push('/login');
+    }, 2000);
+
+  } catch (error) {
+    console.error("Ошибка:", error);
+  }
+};
+</script>
+
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300..700;1,300..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pochaevsk&family=Podkova:wght@400..800&family=Poiret+One&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300..700;1,300..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pochaevsk&family=Podkova:wght@400..800&family=Poiret+One&display=swap");
+
 .register-page {
   width: 100%;
   height: 100vh;
@@ -60,7 +155,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('/src/assets/vladikavkaz.jpg');
+  background-image: url("/src/assets/vladikavkaz.jpg");
   background-size: cover;
   background-position: center;
   z-index: 1;
@@ -90,7 +185,7 @@
 }
 
 .form-title {
-  font-family: 'Podkova', serif;
+  font-family: "Podkova", serif;
   font-weight: 700;
   font-size: 36px;
   color: #ffffff;
@@ -99,7 +194,7 @@
 }
 
 .form-subtitle {
-  font-family: 'Montserrat', serif;
+  font-family: "Montserrat", serif;
   font-size: 18px;
   color: rgba(255, 255, 255, 0.8);
   text-align: center;
@@ -111,14 +206,14 @@
 }
 
 .form-input {
-  width: 100%;     
+  width: 100%;
   height: 50px;
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 10px;
   padding: 0 15px;
   color: #fff;
-  font-family: 'Montserrat', serif;
+  font-family: "Montserrat", serif;
   font-size: 15px;
   outline: none;
   transition: 0.3s;
@@ -130,16 +225,16 @@
 
 .password-row {
   display: flex;
-  justify-content: space-between; 
-  gap: 40px;                      /* Четкий зазор между полями */
+  justify-content: space-between;
+  gap: 40px;
   margin-bottom: 18px;
   width: 100%;
 }
 
 .password-row .input-group {
-  flex: 1; 
-  margin-bottom: 0; 
-  min-width: 0;    /* Важно для корректной работы flexbox с input */
+  flex: 1;
+  margin-bottom: 0;
+  min-width: 0;
 }
 
 .form-terms {
@@ -172,7 +267,7 @@
   border: none;
   border-radius: 20px;
   color: #ffffff;
-  font-family: 'Montserrat', serif;
+  font-family: "Montserrat", serif;
   font-weight: 700;
   font-size: 18px;
   cursor: pointer;
@@ -182,6 +277,11 @@
 
 .register-btn:hover {
   background-color: rgba(120, 63, 28, 1);
+}
+
+.register-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .login-link {
@@ -197,10 +297,31 @@
   text-decoration: none;
 }
 
-/* --- АДАПТИВНОСТЬ: Перестроение полей на мобильных --- */
+.error-message {
+  background-color: rgba(220, 53, 69, 0.9);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: 'Montserrat', serif;
+  font-size: 14px;
+}
+
+.success-message {
+  background-color: rgba(46, 204, 113, 0.9);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: 'Montserrat', serif;
+  font-size: 14px;
+}
+
 @media (max-width: 480px) {
   .password-row {
-    flex-direction: column; /* Поля встают друг под друга */
+    flex-direction: column;
     gap: 10px;
   }
 }

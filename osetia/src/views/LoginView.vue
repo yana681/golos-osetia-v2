@@ -4,23 +4,41 @@
     <div class="login-overlay"></div>
 
     <div class="login-form-container">
-      <form class="login-form" @submit.prevent>
+      <form class="login-form" @submit.prevent="handleLogin">
         <h1 class="form-title">Голос Осетии</h1>
         <p class="form-subtitle">Вход в личный кабинет</p>
 
-        <div class="input-group">
-          <input type="email" placeholder="Электронная почта" class="form-input" required />
+        <div v-if="errorMessage" class="error-message">
+          {{ errorMessage }}
         </div>
 
         <div class="input-group">
-          <input type="password" placeholder="Пароль" class="form-input" required />
+          <input 
+            type="email" 
+            placeholder="Электронная почта" 
+            class="form-input" 
+            v-model="form.email"
+            required 
+          />
+        </div>
+
+        <div class="input-group">
+          <input 
+            type="password" 
+            placeholder="Пароль" 
+            class="form-input" 
+            v-model="form.password"
+            required 
+          />
         </div>
 
         <div class="form-options">
           <a href="#" class="forgot-link">Забыли пароль?</a>
         </div>
 
-        <button type="submit" class="login-btn">Войти</button>
+        <button type="submit" class="login-btn" :disabled="loading">
+          {{ loading ? 'Вход...' : 'Войти' }}
+        </button>
 
         <div class="register-link">
           Нет аккаунта? <router-link to="/register">Зарегистрироваться</router-link>
@@ -31,8 +49,49 @@
 </template>
 
 <script setup>
-</script>
+import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAuth } from "../composables/useAuth";
 
+const router = useRouter();
+const auth = useAuth();
+const loading = ref(false);
+const errorMessage = ref("");
+
+const form = reactive({
+  email: "",
+  password: ""
+});
+
+const handleLogin = async () => {
+  errorMessage.value = "";
+  loading.value = true;
+
+  try {
+    const response = await auth.login({
+      email: form.email,
+      password: form.password
+    });
+
+    if (response.success) {
+      localStorage.setItem('user', JSON.stringify(response.user));
+      
+      if (response.user.role === 'admin') {
+        router.push("/admin");
+      } else {
+        router.push("/profile");
+      }
+    } else {
+      errorMessage.value = response.error || "Ошибка при входе";
+    }
+  } catch (error) {
+    console.error("Ошибка входа:", error);
+    errorMessage.value = error.message || "Произошла ошибка при входе";
+  } finally {
+    loading.value = false;
+  }
+};
+</script>
 
 <style scoped>
 .login-page {
@@ -51,7 +110,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('/src/assets/vladikavkaz.jpg'); 
+  background-image: url('/src/assets/vladikavkaz.jpg');
   background-size: cover;
   background-position: center;
   z-index: 1;
@@ -71,11 +130,10 @@
   position: relative;
   width: 100%;
   max-width: 420px;
-  /* фон с размытием (Glassmorphism) */
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px; 
+  border-radius: 20px;
   padding: 50px 40px;
   z-index: 3;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
@@ -155,6 +213,11 @@
   background-color: rgba(120, 63, 28, 1);
 }
 
+.login-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .register-link {
   margin-top: 25px;
   text-align: center;
@@ -167,5 +230,16 @@
   color: #ffffff;
   font-weight: 500;
   text-decoration: none;
+}
+
+.error-message {
+  background-color: rgba(220, 53, 69, 0.9);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: 'Montserrat', serif;
+  font-size: 14px;
 }
 </style>

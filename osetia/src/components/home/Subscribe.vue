@@ -22,7 +22,9 @@
             class="email-input" 
             required
           /> 
-          <button type="submit" class="submit-btn">Регистрация</button>
+          <button type="submit" class="submit-btn">
+            {{ isAuthenticated ? 'Подписаться' : 'Регистрация' }}
+          </button>
         </form>
       </div>
     </div>
@@ -30,6 +32,28 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const email = ref('')
+const isAuthenticated = ref(false)
+
+onMounted(() => {
+  const user = localStorage.getItem('user')
+  isAuthenticated.value = !!user
+})
+
+const handleRegistration = () => {
+  if (!isAuthenticated.value) {
+    router.push('/register')
+    return
+  }
+  
+  console.log('Подписка на email:', email.value)
+  alert('Вы успешно подписались на новости!')
+  email.value = ''
+}
 </script>
 
 <style scoped>
@@ -125,6 +149,11 @@
   font-size: 20px;
   font-weight: 700;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
 }
 
+.submit-btn:hover {
+  background-color: rgba(100, 50, 20, 1);
+}
 </style>

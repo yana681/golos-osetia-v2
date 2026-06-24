@@ -1,7 +1,28 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import AdminTabs from '../components/admin/AdminTabs.vue'
 import AdminReportsList from '../components/admin/AdminReportsList.vue'
+
+const router = useRouter()
+const isLoading = ref(true)
+
+onMounted(() => {
+  const user = localStorage.getItem('user')
+  if (user) {
+    try {
+      const userData = JSON.parse(user)
+      if (userData.role !== 'admin') {
+        router.push('/profile')
+      }
+    } catch (e) {
+      router.push('/login')
+    }
+  } else {
+    router.push('/login')
+  }
+  isLoading.value = false
+})
 
 const currentFilter = ref('all')
 const searchQuery = ref('')
@@ -51,6 +72,12 @@ const refreshData = () => {
   alert('Данные успешно обновлены!')
 }
 
+// ✅ Функция выхода
+const logout = () => {
+  localStorage.removeItem('user')
+  router.push('/login')
+}
+
 const filteredReports = computed(() => {
   return allReports.value.filter(report => {
     const matchesFilter = currentFilter.value === 'all' || report.statusClass === currentFilter.value
@@ -62,7 +89,7 @@ const filteredReports = computed(() => {
 </script>
 
 <template>
-  <div class="admin-page">
+  <div v-if="!isLoading" class="admin-page">
     <div class="admin-container">
       
       <div class="admin-header">
@@ -76,6 +103,8 @@ const filteredReports = computed(() => {
         </div>
         <div class="header-right">
           <button class="btn-refresh" @click="refreshData">🔄 Обновить данные</button>
+          <!-- ✅ Кнопка выхода для админа -->
+          <button class="btn-logout" @click="logout">🚪 Выйти</button>
         </div>
       </div>
 
@@ -121,7 +150,7 @@ const filteredReports = computed(() => {
 <style scoped>
 .admin-page {
   width: 100%;
-  background: #f4f6f3;
+  background: #F1DFCB;
   min-height: 100vh;
   padding: 40px 20px;
   box-sizing: border-box;
@@ -136,7 +165,7 @@ const filteredReports = computed(() => {
 }
 
 .admin-header {
-  background: #3d5a35;
+  background: #386633;
   border-radius: 30px;
   padding: 40px;
   display: flex;
@@ -158,6 +187,7 @@ const filteredReports = computed(() => {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.15);
   font-size: 40px;
+  font-family: "Montserrat";
   display: flex;
   align-items: center;
   justify-content: center;
@@ -167,6 +197,7 @@ const filteredReports = computed(() => {
 .admin-info h1 {
   margin: 0 0 6px 0;
   font-size: 30px;
+  font-family: "Podkova";
   font-weight: 500;
 }
 
@@ -176,6 +207,7 @@ const filteredReports = computed(() => {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   font-size: 11px;
+  font-family: "Montserrat";
   margin-bottom: 8px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -185,6 +217,12 @@ const filteredReports = computed(() => {
   margin: 0;
   color: rgba(255, 255, 255, 0.7);
   font-size: 15px;
+  font-family: "Montserrat";
+}
+
+.header-right {
+  display: flex;
+  gap: 12px;
 }
 
 .btn-refresh {
@@ -194,6 +232,7 @@ const filteredReports = computed(() => {
   border-radius: 12px;
   padding: 12px 24px;
   font-size: 14px;
+  font-family: "Montserrat";
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
@@ -203,11 +242,29 @@ const filteredReports = computed(() => {
   background: #f0f2f0;
 }
 
+.btn-logout {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-family: "Montserrat";
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-logout:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
 .admin-stats {
   background: white;
   border-radius: 24px;
   padding: 30px 10px;
   display: grid;
+  font-family: "Montserrat";
   grid-template-columns: repeat(4, 1fr);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
   text-align: left;
@@ -225,17 +282,16 @@ const filteredReports = computed(() => {
 .stat-item h2 {
   margin: 0 0 6px 0;
   font-size: 36px;
+  font-family: "Podkova";
   font-weight: 600;
-  color: #2c3e29;
+  color: #825940;
 }
 
-.stat-item h2.status-checking { color: #e09943; }
-.stat-item h2.status-progress { color: #2f80ed; }
-.stat-item h2.status-resolved { color: #27ae60; }
 
 .stat-label {
   font-size: 16px;
   font-weight: 600;
+  font-family: "Montserrat";
   color: #2c3e29;
   margin-bottom: 4px;
 }
@@ -248,9 +304,27 @@ const filteredReports = computed(() => {
 @media (max-width: 992px) {
   .admin-stats { grid-template-columns: repeat(2, 1fr); gap: 20px; }
   .stat-item { border-right: none; }
+  .admin-header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+  .header-right {
+    justify-content: center;
+  }
 }
 
 @media (max-width: 600px) {
   .admin-stats { grid-template-columns: 1fr; }
+  .admin-header {
+    padding: 24px;
+  }
+  .header-left {
+    flex-direction: column;
+    text-align: center;
+  }
+  .header-right {
+    flex-direction: column;
+  }
 }
 </style>

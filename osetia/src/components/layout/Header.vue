@@ -7,7 +7,6 @@
       </div>
 
       <nav class="nav">
-        <a href="#" class="nav-link">Карта</a>
         <router-link to="/themes" class="nav-link">Темы</router-link>
         <router-link to="/results" class="nav-link">Результаты</router-link>
         <router-link to="/news" class="nav-link">Новости</router-link>
@@ -18,16 +17,58 @@
         <button class="action-btn">
           <img src="/src/assets/icons/search-header.png" alt="Поиск" class="header-icon" />
         </button>
-        <button class="action-btn">
+        
+        <button class="action-btn" @click="handleFavorites">
           <img src="/src/assets/icons/save-header.png" alt="Избранные" class="header-icon" />
         </button>
-        <router-link to="/login" class="action-btn">
+        
+        <template v-if="isAuthenticated">
+          <router-link v-if="isAdmin" to="/admin" class="action-btn admin-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
+            </svg>
+          </router-link>
+          <router-link v-else to="/profile" class="action-btn">
+            <img src="/src/assets/icons/user-header.png" alt="Профиль" class="header-icon" />
+          </router-link>
+        </template>
+        <router-link v-else to="/login" class="action-btn">
           <img src="/src/assets/icons/user-header.png" alt="Профиль" class="header-icon" />
         </router-link>
       </div>
     </div>
   </header>
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const isAuthenticated = ref(false)
+const isAdmin = ref(false)
+
+onMounted(() => {
+  const user = localStorage.getItem('user')
+  if (user) {
+    try {
+      const userData = JSON.parse(user)
+      isAuthenticated.value = true
+      isAdmin.value = userData.role === 'admin'
+    } catch (e) {
+      console.error('Ошибка парсинга user:', e)
+    }
+  }
+})
+
+const handleFavorites = () => {
+  if (isAuthenticated.value) {
+    router.push('/profile?tab=favorites')
+  } else {
+    router.push('/login')
+  }
+}
+</script>
 
 <style scoped>
 .header {
@@ -107,6 +148,15 @@
 
 .action-btn:hover {
   transform: scale(1.1);
+}
+
+.action-btn.admin-link {
+  filter: none;
+  color: #783F1C;
+}
+
+.action-btn.admin-link svg {
+  stroke: #783F1C;
 }
 
 .header-icon {

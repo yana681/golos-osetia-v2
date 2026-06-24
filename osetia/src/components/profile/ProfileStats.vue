@@ -50,21 +50,23 @@
   margin: 0 0 8px 0;
   font-size: 36px;
   font-weight: 600;
-  color: #2c3e29;
+  font-family: "Podkova";
+  color: #783F1C;
 }
 
-.stat-item h2.resolved { color: #b07c5b; }
-.stat-item h2.in-progress { color: #4a6b41; }
+
 
 .stat-label {
   font-size: 16px;
   font-weight: 600;
-  color: #2c3e29;
+  color: #2c1a11;
+  font-family: "montserrat";
   margin-bottom: 4px;
 }
 
 .stat-sub {
   font-size: 12px;
+  font-family: "montserrat";
   color: #90a08d;
 }
 </style>
