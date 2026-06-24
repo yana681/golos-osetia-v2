@@ -1,3 +1,4 @@
+// src/router/guards.js
 export function requireAuth(to, from, next) {
   const user = localStorage.getItem('user');
   
@@ -68,5 +69,18 @@ export function preventAdminAccess(to, from, next) {
   } catch (e) {
     console.error('Ошибка проверки роли:', e);
     next('/login');
+  }
+}
+
+// ✅ Новый guard для проверки авторизации при подаче заявки
+export function requireAuthForReport(to, from, next) {
+  const user = localStorage.getItem('user');
+  
+  if (user) {
+    next();
+  } else {
+    // Запоминаем URL, куда хотел перейти пользователь
+    sessionStorage.setItem('redirectAfterLogin', to.fullPath)
+    next('/login')
   }
 }

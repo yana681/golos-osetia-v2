@@ -2,60 +2,109 @@
   <div class="card">
     <h2>1. Что случилось?</h2>
 
+    <!-- ❌ Убрали визуальное отображение выбранной категории и подтемы -->
+    <!-- Оставляем только кнопки выбора категории -->
+
     <div class="categories">
       <button
+        v-for="cat in categories"
+        :key="cat.value"
         class="category-btn"
-        :class="{ active: selectedCategory === 'roads' }"
-        @click="selectCategory('roads')"
+        :class="{ active: selectedCategory === cat.value }"
+        @click="selectCategory(cat.value)"
       >
-        Дороги и тротуары
-      </button>
-
-      <button
-        class="category-btn"
-        :class="{ active: selectedCategory === 'improvement' }"
-        @click="selectCategory('improvement')"
-      >
-        Благоустройство
-      </button>
-
-      <button
-        class="category-btn"
-        :class="{ active: selectedCategory === 'lighting' }"
-        @click="selectCategory('lighting')"
-      >
-        Освещение
-      </button>
-
-      <button
-        class="category-btn"
-        :class="{ active: selectedCategory === 'utilities' }"
-        @click="selectCategory('utilities')"
-      >
-        ЖКХ
-      </button>
-
-      <button
-        class="category-btn"
-        :class="{ active: selectedCategory === 'transport' }"
-        @click="selectCategory('transport')"
-      >
-        Транспорт
+        {{ cat.label }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
+import { ref, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
 export default {
-  data() {
-    return {
-      selectedCategory: null
+  props: {
+    initialCategory: {
+      type: String,
+      default: ''
+    },
+    initialSubtheme: {
+      type: String,
+      default: ''
     }
   },
-  methods: {
-    selectCategory(category) {
-      this.selectedCategory = category
+  emits: ['update:category', 'update:subtheme'],
+  setup(props, { emit }) {
+    const route = useRoute()
+    const selectedCategory = ref(null)
+    const selectedSubtheme = ref(null)
+
+    const categories = [
+      { label: 'Дороги и тротуары', value: 'roads' },
+      { label: 'Благоустройство', value: 'improvement' },
+      { label: 'Освещение', value: 'lighting' },
+      { label: 'ЖКХ', value: 'utilities' },
+      { label: 'Транспорт', value: 'transport' }
+    ]
+
+    // Маппинг категорий из аккордеона на категории в форме
+    const categoryMapping = {
+      'Мой двор': 'improvement',
+      'Мой дом': 'utilities',
+      'Моя дорога': 'roads',
+      'Государственные учреждения': 'utilities',
+      'Общественный транспорт': 'transport',
+      'Городская территория': 'improvement'
+    }
+
+    const selectCategory = (category) => {
+      selectedCategory.value = category
+      emit('update:category', category)
+    }
+
+    // Проверяем URL параметры при загрузке
+    onMounted(() => {
+      const categoryParam = route.query.category || props.initialCategory
+      const subthemeParam = route.query.subtheme || props.initialSubtheme
+
+      if (categoryParam) {
+        const mappedCategory = categoryMapping[categoryParam]
+        if (mappedCategory) {
+          selectedCategory.value = mappedCategory
+          emit('update:category', mappedCategory)
+        }
+      }
+      
+      if (subthemeParam) {
+        selectedSubtheme.value = subthemeParam
+        emit('update:subtheme', subthemeParam)
+      }
+    })
+
+    // Следим за изменением props
+    watch(() => props.initialCategory, (newVal) => {
+      if (newVal) {
+        const mappedCategory = categoryMapping[newVal]
+        if (mappedCategory) {
+          selectedCategory.value = mappedCategory
+          emit('update:category', mappedCategory)
+        }
+      }
+    })
+
+    watch(() => props.initialSubtheme, (newVal) => {
+      if (newVal) {
+        selectedSubtheme.value = newVal
+        emit('update:subtheme', newVal)
+      }
+    })
+
+    return {
+      selectedCategory,
+      selectedSubtheme,
+      categories,
+      selectCategory
     }
   }
 }
@@ -87,9 +136,14 @@ export default {
   transition: 0.2s;
 }
 
+.category-btn:hover {
+  border-color: #386633;
+  background: #f7faf7;
+}
+
 .category-btn.active {
   background: #2e5a27;
   color: white;
-  border-color:#2e5a27;
+  border-color: #2e5a27;
 }
 </style>

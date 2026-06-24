@@ -76,7 +76,13 @@ const handleLogin = async () => {
     if (response.success) {
       localStorage.setItem('user', JSON.stringify(response.user));
       
-      if (response.user.role === 'admin') {
+      // ✅ Проверяем, есть ли сохранённый URL для редиректа
+      const redirectUrl = sessionStorage.getItem('redirectAfterLogin')
+      
+      if (redirectUrl) {
+        sessionStorage.removeItem('redirectAfterLogin')
+        router.push(redirectUrl)
+      } else if (response.user.role === 'admin') {
         router.push("/admin");
       } else {
         router.push("/profile");

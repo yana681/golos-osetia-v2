@@ -1,4 +1,6 @@
 <script setup>
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import ProblemCategorySelector from '../components/report-problem/ProblemCategorySelector.vue'
 import ProblemDescription from '../components/report-problem/ProblemDescription.vue'
 import AddressInput from '../components/report-problem/AddressInput.vue'
@@ -6,47 +8,125 @@ import PhotoUploader from '../components/report-problem/PhotoUploader.vue'
 import ContactForm from '../components/report-problem/ContactForm.vue'
 import HowToBlock from '../components/report-problem/HowToBlock.vue'
 import NextStepsBlock from '../components/report-problem/NextStepsBlock.vue'
+
+const route = useRoute()
+
+// Данные формы
+const formData = ref({
+  category: '',
+  subtheme: '',
+  description: '',
+  address: '',
+  contact: '',
+  photo: null
+})
+
+// Данные из URL
+const selectedCategory = ref('')
+const selectedSubtheme = ref('')
+
+// Проверяем URL при загрузке
+onMounted(() => {
+  const category = route.query.category
+  const subtheme = route.query.subtheme
+  
+  if (category) {
+    selectedCategory.value = category
+    formData.value.category = category
+  }
+  if (subtheme) {
+    selectedSubtheme.value = subtheme
+    formData.value.subtheme = subtheme
+  }
+})
+
+// Обработчики обновления полей
+const updateCategory = (value) => {
+  formData.value.category = value
+}
+
+const updateSubtheme = (value) => {
+  formData.value.subtheme = value
+}
+
+const updateDescription = (value) => {
+  formData.value.description = value
+}
+
+const updateAddress = (value) => {
+  formData.value.address = value
+}
+
+const updateContact = (value) => {
+  formData.value.contact = value
+}
+
+const updatePhoto = (file) => {
+  formData.value.photo = file
+}
+
+// Отправка формы
+const submitForm = () => {
+  console.log('📝 Данные формы:', {
+    category: formData.value.category,
+    subtheme: formData.value.subtheme,
+    description: formData.value.description,
+    address: formData.value.address,
+    contact: formData.value.contact,
+    photo: formData.value.photo ? formData.value.photo.name : 'не загружено'
+  })
+  
+  // Проверка обязательных полей
+  if (!formData.value.description) {
+    alert('Пожалуйста, опишите проблему')
+    return
+  }
+  
+  if (!formData.value.address) {
+    alert('Пожалуйста, укажите адрес')
+    return
+  }
+  
+  if (!formData.value.photo) {
+    alert('Пожалуйста, загрузите фото')
+    return
+  }
+  
+  alert('✅ Заявка успешно отправлена!')
+  console.log('📤 Отправка данных с фото:', formData.value.photo)
+}
 </script>
 
 <template>
   <div class="report-page">
-
     <div class="container">
-
-      <h1 class="title">
-        Сообщить о проблеме
-      </h1>
+      <h1 class="title">Сообщить о проблеме</h1>
 
       <div class="report-layout">
-
-        <!-- Левая колонка -->
         <div class="left-column">
-
-          <ProblemCategorySelector />
-
-          <ProblemDescription />
-
-          <AddressInput />
-
-          <PhotoUploader />
-
-          <ContactForm />
-
+          <ProblemCategorySelector 
+            :initialCategory="selectedCategory"
+            :initialSubtheme="selectedSubtheme"
+            @update:category="updateCategory"
+            @update:subtheme="updateSubtheme"
+          />
+          <ProblemDescription :initialSubtheme="selectedSubtheme" @update="updateDescription" />
+          <AddressInput @update="updateAddress" />
+          <PhotoUploader @update="updatePhoto" />
+          <ContactForm @submit="updateContact" />
+          
+          <!-- Кнопка отправки -->
+          <button class="submit-report-btn" @click="submitForm">
+            Отправить заявку
+          </button>
         </div>
 
-        <!-- Правая колонка -->
         <div class="right-column">
-
           <HowToBlock />
-
           <NextStepsBlock />
-
         </div>
-
       </div>
-
     </div>
-
   </div>
 </template>
 
@@ -54,16 +134,20 @@ import NextStepsBlock from '../components/report-problem/NextStepsBlock.vue'
 .report-page {
   padding: 40px 0;
   background-color: #f1dfcb;
+  min-height: 100vh;
 }
 
 .container {
   max-width: 1400px;
   margin: 0 auto;
+  padding: 0 20px;
 }
 
 .title {
   margin-bottom: 30px;
   font-family: "Podkova";
+  font-size: 38px;
+  color: #2c3e29;
 }
 
 .report-layout {
@@ -77,5 +161,35 @@ import NextStepsBlock from '../components/report-problem/NextStepsBlock.vue'
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.submit-report-btn {
+  width: 100%;
+  padding: 18px;
+  background: #4a6b41;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-report-btn:hover {
+  background: #3b5a33;
+  transform: scale(1.02);
+  box-shadow: 0 4px 16px rgba(74, 107, 65, 0.3);
+}
+
+@media (max-width: 992px) {
+  .report-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .title {
+    font-size: 30px;
+  }
 }
 </style>

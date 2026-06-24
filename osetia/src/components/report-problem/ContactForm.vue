@@ -8,15 +8,11 @@
       placeholder="Email или телефон"
       class="input"
     />
-
-    <button class="submit-btn" @click="submit">
-      Отправить сообщение
-    </button>
   </div>
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits, watch } from 'vue'
 
 const emit = defineEmits(['submit'])
 const contact = ref('')
@@ -24,6 +20,11 @@ const contact = ref('')
 const submit = () => {
   emit('submit', contact.value)
 }
+
+// Автоматически отправляем при изменении
+watch(contact, (val) => {
+  emit('submit', val)
+})
 </script>
 
 <style scoped>
@@ -45,23 +46,10 @@ const submit = () => {
   padding: 14px;
   border-radius: 14px;
   border: 1px solid #ddd;
+  outline: none;
 }
 
-.submit-btn {
-  margin-top: 16px;
-  width: 100%;
-  padding: 16px;
-  border: none;
-  border-radius: 14px;
-  background: #386633;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  font-family: "Montserrat";
-  transition: 0.2s;
-}
-
-.submit-btn:hover {
-  background: #2f552a;
+.input:focus {
+  border-color: #386633;
 }
 </style>

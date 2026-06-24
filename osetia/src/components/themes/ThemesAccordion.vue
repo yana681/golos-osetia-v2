@@ -33,7 +33,7 @@
                 v-for="(subtheme, idx) in item.subthemes" 
                 :key="idx" 
                 class="subtheme-item"
-                @click="selectSubtheme(item.title, subtheme)"
+                @click="selectSubtheme(item.id, item.title, subtheme)"
               >
                 <span class="subtheme-bullet"></span>
                 <span class="subtheme-text">{{ subtheme }}</span>
@@ -48,11 +48,11 @@
 
 <script setup>
 import { ref, onMounted, computed, watch, nextTick } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
+const router = useRouter()
 
-// ✅ Принимаем prop от родителя
 const props = defineProps({
   topicId: {
     type: Number,
@@ -69,37 +69,70 @@ const themes = [
     id: 1, 
     title: 'Мой двор', 
     icon: '/src/assets/icons/my-yard-brown.png',
-    subthemes: ['Неубранный мусор / переполненные контейнеры', 'Сломанная детская или спортивная площадка', 'Ямы на внутридворовом проезде', 'Плохое освещение во дворе', 'Нарушение правил парковки газонах']
+    subthemes: [
+      'Неубранный мусор / переполненные контейнеры',
+      'Сломанная детская или спортивная площадка',
+      'Ямы на внутридворовом проезде',
+      'Плохое освещение во дворе',
+      'Нарушение правил парковки на газонах'
+    ]
   },
   { 
     id: 2, 
     title: 'Мой дом', 
     icon: '/src/assets/icons/home.png',
-    subthemes: ['Протечка кровли / затопление подвала', 'Неисправность лифта', 'Плохая уборка в подъезде', 'Трещины в стенах / разрушение фасада', 'Проблемы с отоплением или водоснабжением']
+    subthemes: [
+      'Протечка кровли / затопление подвала',
+      'Неисправность лифта',
+      'Плохая уборка в подъезде',
+      'Трещины в стенах / разрушение фасада',
+      'Проблемы с отоплением или водоснабжением'
+    ]
   },
   { 
     id: 3, 
     title: 'Моя дорога', 
     icon: '/src/assets/icons/road.png',
-    subthemes: ['Ямы и выбоины на проезжей части', 'Отсутствие дорожной разметки или знаков', 'Неисправный светофор', 'Плохое состояние тротуаров', 'Гололед или неубранный снег на дороге']
+    subthemes: [
+      'Ямы и выбоины на проезжей части',
+      'Отсутствие дорожной разметки или знаков',
+      'Неисправный светофор',
+      'Плохое состояние тротуаров',
+      'Гололед или неубранный снег на дороге'
+    ]
   },
   { 
     id: 4, 
     title: 'Государственные учреждения', 
     icon: '/src/assets/icons/gov.png',
-    subthemes: ['Очереди / неудобный график работы', 'Плохое состояние здания или внутренних помещений', 'Отсутствие доступной среды (пандусов) для инвалидов', 'Жалоба на качество обслуживания']
+    subthemes: [
+      'Очереди / неудобный график работы',
+      'Плохое состояние здания или внутренних помещений',
+      'Отсутствие доступной среды (пандусов) для инвалидов',
+      'Жалоба на качество обслуживания'
+    ]
   },
   { 
     id: 5, 
     title: 'Общественный транспорт', 
     icon: '/src/assets/icons/transport.png',
-    subthemes: ['Нарушение расписания / долгие интервалы движения', 'Грязь или поломки внутри салона', 'Некорректное поведение водителя или кондуктора', 'Неисправность валидаторов / терминалов оплаты']
+    subthemes: [
+      'Нарушение расписания / долгие интервалы движения',
+      'Грязь или поломки внутри салона',
+      'Некорректное поведение водителя или кондуктора',
+      'Неисправность валидаторов / терминалов оплаты'
+    ]
   },
   { 
     id: 6, 
     title: 'Городская территория', 
     icon: '/src/assets/icons/territory.png',
-    subthemes: ['Несанкционированная свалка в городе', 'Сломанные лавочки или урны в парках', 'Заброшенные здания или опасные строительные объекты', 'Отсутствие озеленения / неухоженные газоны']
+    subthemes: [
+      'Несанкционированная свалка в городе',
+      'Сломанные лавочки или урны в парках',
+      'Заброшенные здания или опасные строительные объекты',
+      'Отсутствие озеленения / неухоженные газоны'
+    ]
   }
 ]
 
@@ -115,10 +148,7 @@ const toggleAccordion = (id) => {
   activeId.value = activeId.value === id ? null : id
 }
 
-// ✅ Функция для открытия раздела по ID
 const openTopic = (topicId) => {
-  console.log('🟠 Открываем тему с ID:', topicId)
-  
   const topic = themes.find(t => t.id === topicId)
   if (topic) {
     activeId.value = topicId
@@ -136,30 +166,46 @@ const openTopic = (topicId) => {
         })
       }
     })
-  } else {
-    console.warn('⚠️ Тема с ID', topicId, 'не найдена')
   }
 }
 
-const selectSubtheme = (category, subtheme) => {
-  console.log(`Выбрана категория: ${category}, подтема: ${subtheme}`)
+// ✅ Функция выбора подтемы
+const selectSubtheme = (categoryId, categoryTitle, subtheme) => {
+  console.log(`📝 Выбрано: категория ${categoryTitle}, подтема: ${subtheme}`)
+  
+  // Проверяем авторизацию
+  const user = localStorage.getItem('user')
+  
+  if (!user) {
+    // Если не авторизован - перенаправляем на страницу входа
+    router.push('/login')
+    return
+  }
+  
+  // Если авторизован - перенаправляем на страницу подачи заявки с параметрами
+  router.push({
+    path: '/report-problem',
+    query: {
+      category: categoryTitle,
+      subtheme: subtheme,
+      categoryId: categoryId
+    }
+  })
 }
 
-// ✅ Следим за изменением prop от родителя
+// Следим за изменением prop от родителя
 watch(() => props.topicId, (newId) => {
   if (newId) {
-    console.log('🟡 Получен новый ID от родителя:', newId)
     openTopic(newId)
   }
 }, { immediate: true })
 
-// ✅ Также проверяем URL параметр при загрузке
+// Проверяем URL параметр при загрузке
 onMounted(() => {
   const queryTopic = route.query.topic
   
   if (queryTopic) {
     const topicIdNum = parseInt(queryTopic, 10)
-    console.log('🔴 Получен ID из URL:', topicIdNum)
     openTopic(topicIdNum)
   }
 })

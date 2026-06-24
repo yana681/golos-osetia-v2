@@ -2,9 +2,11 @@
   <div class="card">
     <h2>Описание проблемы</h2>
 
+    <!-- ❌ Убрали визуальное отображение подтемы -->
+
     <textarea
       v-model="text"
-      placeholder="Опишите проблему..."
+      :placeholder="placeholderText"
       class="textarea"
     />
 
@@ -15,10 +17,61 @@
 </template>
 
 <script setup>
-import { defineEmits, ref, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const props = defineProps({
+  initialSubtheme: {
+    type: String,
+    default: ''
+  }
+})
 
 const emit = defineEmits(['update'])
 const text = ref('')
+const subtheme = ref('')
+
+// Плейсхолдер в зависимости от выбранной подтемы
+const placeholderText = computed(() => {
+  if (subtheme.value) {
+    return `Опишите подробно: ${subtheme.value.toLowerCase()}...`
+  }
+  return 'Опишите проблему...'
+})
+
+// Проверяем URL параметры при загрузке
+onMounted(() => {
+  const subthemeParam = route.query.subtheme || props.initialSubtheme
+  if (subthemeParam) {
+    subtheme.value = subthemeParam
+    // Добавляем подсказку в текст
+    text.value = `Проблема: ${subthemeParam}\n\n`
+    emit('update', text.value)
+  }
+})
+
+// Следим за изменением props
+watch(() => props.initialSubtheme, (newSubtheme) => {
+  if (newSubtheme) {
+    subtheme.value = newSubtheme
+    if (!text.value.startsWith('Проблема:')) {
+      text.value = `Проблема: ${newSubtheme}\n\n`
+      emit('update', text.value)
+    }
+  }
+})
+
+// Следим за изменением URL
+watch(() => route.query.subtheme, (newSubtheme) => {
+  if (newSubtheme) {
+    subtheme.value = newSubtheme
+    if (!text.value.startsWith('Проблема:')) {
+      text.value = `Проблема: ${newSubtheme}\n\n`
+      emit('update', text.value)
+    }
+  }
+})
 
 watch(text, (val) => {
   emit('update', val)
@@ -45,6 +98,7 @@ watch(text, (val) => {
   padding: 14px;
   outline: none;
   font-family: "Montserrat";
+  resize: vertical;
 }
 
 .textarea:focus {

@@ -10,7 +10,7 @@ import ReportProblemView from '../views/ReportProblemView.vue'
 import UserProfileView from '../views/UserProfileView.vue'
 import AdminView from '../views/AdminView.vue'
 
-import { requireAuth, redirectIfAuth, requireAdmin, preventAdminAccess } from './guards.js'
+import { requireAuth, redirectIfAuth, requireAdmin, preventAdminAccess, requireAuthForReport } from './guards.js'
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -36,6 +36,7 @@ const router = createRouter({
 			path: '/report-problem',
 			name: 'report-problem',
 			component: ReportProblemView,
+			beforeEnter: requireAuthForReport, // ✅ Проверка авторизации для подачи заявки
 		},
 		{
 			path: '/themes',
