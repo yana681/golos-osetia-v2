@@ -3,6 +3,9 @@
     <div class="reports-header">
       <h3 class="reports-title">Мои сообщения</h3>
       <span class="reports-count">{{ filteredReports.length }}</span>
+      <button class="refresh-btn" @click="loadReports" :disabled="isLoading">
+        {{ isLoading ? '⏳' : '🔄' }}
+      </button>
     </div>
     
     <div class="filter-bar">
@@ -33,38 +36,45 @@
       </div>
     </div>
 
-    <div class="reports-grid" v-if="filteredReports.length > 0">
+    <div v-if="isLoading" class="loading-state">
+      <p>Загрузка заявок...</p>
+    </div>
+
+    <div v-else-if="filteredReports.length > 0" class="reports-grid">
       <ReportCard 
-        v-for="(report, index) in filteredReports" 
-        :key="index"
-        :title="report.title"
+        v-for="report in filteredReports" 
+        :key="report.id"
+        :title="report.subtheme || report.category"
         :description="report.description"
-        :statusText="report.statusText"
-        :statusClass="report.statusClass"
-        :location="report.location"
+        :statusText="report.status_text"
+        :statusClass="report.status_class"
+        :location="report.address"
         :date="report.date"
-        :likes="report.likes"
-        :imgSrc="report.imgSrc"
+        :likes="0"
+        :imgSrc="report.photo_url || '/src/assets/placeholder.jpg'"
       />
     </div>
     
-    <div class="empty-state" v-else>
+    <div v-else class="empty-state">
       <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#c5d2c3" stroke-width="1.5">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         <line x1="9" y1="10" x2="15" y2="10"/>
       </svg>
-      <p class="empty-text">Нет сообщений с выбранным статусом</p>
-      <p class="empty-hint">Измените фильтр или создайте новое сообщение</p>
+      <p class="empty-text">У вас пока нет заявок</p>
+      <p class="empty-hint">Создайте новую заявку, чтобы начать</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import ReportCard from './ReportCard.vue'  // ✅ правильный импорт
+import { ref, computed, onMounted } from 'vue'
+import { authService } from '../../services/auth.services.js'
+import ReportCard from './ReportCard.vue'
 
 const currentFilter = ref('all')
 const searchQuery = ref('')
+const reports = ref([])
+const isLoading = ref(false)
 
 const filters = [
   { label: 'Все', value: 'all' },
@@ -74,77 +84,53 @@ const filters = [
   { label: 'Отклонено', value: 'rejected' }
 ]
 
-const allReports = ref([
-  { 
-    title: "Яма на тротуаре по ул. Ленина, 23",
-    description: "Глубокая яма мешает проходу, особенно в дождливую погоду.",
-    statusText: "На проверке",
-    statusClass: "checking", 
-    location: "ул. Ленина, 23",
-    date: "12.05.2025",
-    likes: 12,
-    imgSrc: "https://tengrinews.kz/userdata/news/2021/news_431422/thumb_m/photo_354714.jpeg"
-  },
-  { 
-    title: "Переполненные мусорные баки",
-    description: "Контейнеры переполнены, мусор разносится ветром по всей улице.",
-    statusText: "В работе",
-    statusClass: "in-progress",
-    location: "ул. Пушкина, 15",
-    date: "10.05.2025",
-    likes: 8,
-    imgSrc: "https://avatars.mds.yandex.net/i?id=050510a0a5a0b09979698ad5e1d435af-5362606-images-thumbs&n=13"
-  },
-  { 
-    title: "Не работает уличный фонарь",
-    description: "Фонарь не горит уже неделю, темно по вечерам.",
-    statusText: "Решено",
-    statusClass: "resolved",
-    location: "ул. Мира, 7",
-    date: "05.05.2025",
-    likes: 15,
-    imgSrc: "https://kaliningradtoday.ru/wp-content/uploads/2026/02/1771229582-ee54208942d314d6678d844e470f397e.jpg"
-  },
-  { 
-    title: "Сломанная детская площадка",
-    description: "Качели сломаны, опасно для маленьких детей.",
-    statusText: "Решено",
-    statusClass: "resolved",
-    location: "ул. Гагарина, 10",
-    date: "28.04.2025",
-    likes: 21,
-    imgSrc: "https://pristalica.by/app/uploads/2023/06/ploshh-1024x768.jpg"
-  },
-  { 
-    title: "Граффити на стене дома",
-    description: "Надписи портят внешний вид исторического здания.",
-    statusText: "Отклонено",
-    statusClass: "rejected",
-    location: "ул. Кирова, 34",
-    date: "01.05.2025",
-    likes: 3,
-    imgSrc: "https://s12.stc.yc.kpcdn.net/share/i/12/13483182/wr-960.webp"
+const loadReports = async () => {
+  isLoading.value = true
+  try {
+    const response = await authService.getUserReports()
+    console.log('📥 Ответ от сервера:', response) // ✅ Для отладки
+    
+    if (response.success) {
+      reports.value = response.reports.map(report => {
+        // ✅ Проверяем, есть ли фото
+        console.log('📸 Фото для заявки', report.id, ':', report.photo_url)
+        
+        return {
+          ...report,
+          // Если photo_url начинается с /uploads, добавляем http://voiceossetia.local
+          photo_url: report.photo_url && !report.photo_url.startsWith('http') 
+            ? `http://voiceossetia.local${report.photo_url}` 
+            : report.photo_url
+        }
+      })
+    }
+  } catch (error) {
+    console.error('Ошибка загрузки заявок:', error)
+  } finally {
+    isLoading.value = false
   }
-])
+}
 
 const getCountByStatus = (status) => {
-  if (status === 'all') return allReports.value.length
-  return allReports.value.filter(r => r.statusClass === status).length
+  if (status === 'all') return reports.value.length
+  return reports.value.filter(r => r.status === status).length
 }
 
 const filteredReports = computed(() => {
-  return allReports.value.filter(report => {
-    const matchesFilter = currentFilter.value === 'all' || report.statusClass === currentFilter.value
-    const matchesSearch = report.title.toLowerCase().includes(searchQuery.value.toLowerCase()) || 
-                          report.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+  return reports.value.filter(report => {
+    const matchesFilter = currentFilter.value === 'all' || report.status === currentFilter.value
+    const searchText = `${report.category} ${report.subtheme} ${report.description} ${report.address}`.toLowerCase()
+    const matchesSearch = searchText.includes(searchQuery.value.toLowerCase())
     return matchesFilter && matchesSearch
   })
+})
+
+onMounted(() => {
+  loadReports()
 })
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Podkova:wght@400;600;700;800&family=Montserrat:wght@200;300;400;500;600;700&display=swap');
-
 .user-reports {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
@@ -177,6 +163,25 @@ const filteredReports = computed(() => {
   background: rgba(0, 0, 0, 0.04);
   padding: 2px 12px;
   border-radius: 50px;
+}
+
+.refresh-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.refresh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .filter-bar {
@@ -278,6 +283,13 @@ const filteredReports = computed(() => {
   margin-top: 4px;
 }
 
+.loading-state {
+  text-align: center;
+  padding: 40px 20px;
+  font-family: 'Montserrat', sans-serif;
+  color: #7a8a77;
+}
+
 .empty-state {
   text-align: center;
   padding: 50px 20px;
@@ -309,16 +321,13 @@ const filteredReports = computed(() => {
   .reports-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
   .filter-bar {
     flex-direction: column;
     align-items: stretch;
   }
-  
   .search-wrapper {
     width: 100%;
   }
-  
   .search-input {
     width: 100%;
   }
@@ -328,15 +337,12 @@ const filteredReports = computed(() => {
   .user-reports {
     padding: 20px 16px;
   }
-  
   .reports-grid {
     grid-template-columns: 1fr;
   }
-  
   .filter-tags {
     gap: 6px;
   }
-  
   .filter-tag {
     font-size: 12px;
     padding: 6px 12px;

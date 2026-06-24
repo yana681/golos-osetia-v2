@@ -55,11 +55,68 @@ export const authService = {
     return handleResponse(response);
   },
 
+  uploadPhoto: async (file) => {
+    const formData = new FormData();
+    formData.append('photo', file);
+
+    const response = await fetch(`${API_BASE_URL}/upload-photo.php`, {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+    });
+
+    return handleResponse(response);
+  },
+
+  // ✅ Отправка заявки с путём к фото
+  submitReport: async (reportData) => {
+    const response = await fetch(`${API_BASE_URL}/submit-report.php`, {
+      ...defaultOptions,
+      method: "POST",
+      body: JSON.stringify(reportData),
+    });
+    return handleResponse(response);
+  },
+
   // ✅ Новая функция для проверки роли пользователя
   checkAdminRole: async () => {
     const response = await fetch(`${API_BASE_URL}/check-admin.php`, {
       ...defaultOptions,
       method: "GET",
+    });
+    return handleResponse(response);
+    
+  },
+  submitReport: async (reportData) => {
+    const response = await fetch(`${API_BASE_URL}/submit-report.php`, {
+      ...defaultOptions,
+      method: "POST",
+      body: JSON.stringify(reportData),
+    });
+    return handleResponse(response);
+  },
+
+  getUserReports: async () => {
+    const response = await fetch(`${API_BASE_URL}/get-user-reports.php`, {
+      ...defaultOptions,
+      method: "GET",
+    });
+    return handleResponse(response);
+  },
+
+  getAllReports: async () => {
+    const response = await fetch(`${API_BASE_URL}/get-all-reports.php`, {
+      ...defaultOptions,
+      method: "GET",
+    });
+    return handleResponse(response);
+  },
+
+  updateReportStatus: async (reportId, status) => {
+    const response = await fetch(`${API_BASE_URL}/update-report-status.php`, {
+      ...defaultOptions,
+      method: "POST",
+      body: JSON.stringify({ report_id: reportId, status: status }),
     });
     return handleResponse(response);
   },

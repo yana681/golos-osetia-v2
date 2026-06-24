@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import ProblemCategorySelector from '../components/report-problem/ProblemCategorySelector.vue'
 import ProblemDescription from '../components/report-problem/ProblemDescription.vue'
 import AddressInput from '../components/report-problem/AddressInput.vue'
@@ -8,24 +8,25 @@ import PhotoUploader from '../components/report-problem/PhotoUploader.vue'
 import ContactForm from '../components/report-problem/ContactForm.vue'
 import HowToBlock from '../components/report-problem/HowToBlock.vue'
 import NextStepsBlock from '../components/report-problem/NextStepsBlock.vue'
+import { authService } from '../services/auth.services.js'
 
 const route = useRoute()
+const router = useRouter()
 
-// Данные формы
 const formData = ref({
   category: '',
   subtheme: '',
   description: '',
   address: '',
   contact: '',
-  photo: null
+  photo_path: null
 })
 
-// Данные из URL
+const isLoading = ref(false)
+const submitMessage = ref('')
 const selectedCategory = ref('')
 const selectedSubtheme = ref('')
 
-// Проверяем URL при загрузке
 onMounted(() => {
   const category = route.query.category
   const subtheme = route.query.subtheme
@@ -40,43 +41,24 @@ onMounted(() => {
   }
 })
 
-// Обработчики обновления полей
-const updateCategory = (value) => {
-  formData.value.category = value
+const updateCategory = (value) => { formData.value.category = value }
+const updateSubtheme = (value) => { formData.value.subtheme = value }
+const updateDescription = (value) => { formData.value.description = value }
+const updateAddress = (value) => { formData.value.address = value }
+const updateContact = (value) => { formData.value.contact = value }
+
+// ✅ Получаем путь к фото от PhotoUploader
+const updatePhoto = (photoPath) => {
+  formData.value.photo_path = photoPath
+  console.log('📸 Путь к фото:', photoPath)
 }
 
-const updateSubtheme = (value) => {
-  formData.value.subtheme = value
-}
-
-const updateDescription = (value) => {
-  formData.value.description = value
-}
-
-const updateAddress = (value) => {
-  formData.value.address = value
-}
-
-const updateContact = (value) => {
-  formData.value.contact = value
-}
-
-const updatePhoto = (file) => {
-  formData.value.photo = file
-}
-
-// Отправка формы
-const submitForm = () => {
-  console.log('📝 Данные формы:', {
-    category: formData.value.category,
-    subtheme: formData.value.subtheme,
-    description: formData.value.description,
-    address: formData.value.address,
-    contact: formData.value.contact,
-    photo: formData.value.photo ? formData.value.photo.name : 'не загружено'
-  })
+const submitForm = async () => {
+  if (!formData.value.category) {
+    alert('Пожалуйста, выберите категорию')
+    return
+  }
   
-  // Проверка обязательных полей
   if (!formData.value.description) {
     alert('Пожалуйста, опишите проблему')
     return
@@ -87,13 +69,50 @@ const submitForm = () => {
     return
   }
   
-  if (!formData.value.photo) {
+  if (!formData.value.photo_path) {
     alert('Пожалуйста, загрузите фото')
     return
   }
-  
-  alert('✅ Заявка успешно отправлена!')
-  console.log('📤 Отправка данных с фото:', formData.value.photo)
+
+  isLoading.value = true
+  submitMessage.value = ''
+
+  try {
+    const reportData = {
+      category: formData.value.category,
+      subtheme: formData.value.subtheme || 'Не указано',
+      description: formData.value.description,
+      address: formData.value.address,
+      contact: formData.value.contact || '',
+      photo_path: formData.value.photo_path
+    }
+
+    console.log('📤 Отправка заявки с фото:', reportData)
+
+    const response = await authService.submitReport(reportData)
+
+    if (response.success) {
+      submitMessage.value = '✅ Заявка успешно отправлена!'
+      
+      formData.value = {
+        category: '',
+        subtheme: '',
+        description: '',
+        address: '',
+        contact: '',
+        photo_path: null
+      }
+      
+      setTimeout(() => {
+        router.push('/profile')
+      }, 2000)
+    }
+  } catch (error) {
+    console.error('Ошибка отправки:', error)
+    submitMessage.value = '❌ Ошибка: ' + error.message
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>
 
@@ -101,6 +120,10 @@ const submitForm = () => {
   <div class="report-page">
     <div class="container">
       <h1 class="title">Сообщить о проблеме</h1>
+
+      <div v-if="submitMessage" class="submit-message" :class="{ success: submitMessage.includes('✅'), error: submitMessage.includes('❌') }">
+        {{ submitMessage }}
+      </div>
 
       <div class="report-layout">
         <div class="left-column">
@@ -115,9 +138,8 @@ const submitForm = () => {
           <PhotoUploader @update="updatePhoto" />
           <ContactForm @submit="updateContact" />
           
-          <!-- Кнопка отправки -->
-          <button class="submit-report-btn" @click="submitForm">
-            Отправить заявку
+          <button class="submit-report-btn" @click="submitForm" :disabled="isLoading">
+            {{ isLoading ? 'Отправка...' : 'Отправить заявку' }}
           </button>
         </div>
 
@@ -150,6 +172,27 @@ const submitForm = () => {
   color: #2c3e29;
 }
 
+.submit-message {
+  padding: 16px 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.submit-message.success {
+  background: rgba(46, 204, 113, 0.15);
+  color: #27ae60;
+  border: 1px solid #27ae60;
+}
+
+.submit-message.error {
+  background: rgba(231, 76, 60, 0.15);
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+
 .report-layout {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -177,17 +220,21 @@ const submitForm = () => {
   transition: all 0.3s ease;
 }
 
-.submit-report-btn:hover {
+.submit-report-btn:hover:not(:disabled) {
   background: #3b5a33;
   transform: scale(1.02);
   box-shadow: 0 4px 16px rgba(74, 107, 65, 0.3);
+}
+
+.submit-report-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 @media (max-width: 992px) {
   .report-layout {
     grid-template-columns: 1fr;
   }
-  
   .title {
     font-size: 30px;
   }

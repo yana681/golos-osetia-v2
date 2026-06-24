@@ -188,7 +188,7 @@ const logout = () => {
 }
 
 .banner-btn.primary:hover {
-  background: #3b5a33;
+  background: #386633;
   transform: scale(1.02);
   box-shadow: 0 4px 16px rgba(74, 107, 65, 0.3);
 }

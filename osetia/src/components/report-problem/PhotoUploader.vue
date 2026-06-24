@@ -11,8 +11,7 @@
         @change="onFileChange"
       />
 
-      <!-- Если фото ещё не загружено -->
-      <div v-if="!image" class="upload-placeholder">
+      <div v-if="!image && !isUploading" class="upload-placeholder">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#b0c0ad" stroke-width="1.5">
           <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
           <circle cx="8.5" cy="8.5" r="1.5"/>
@@ -22,7 +21,11 @@
         <p class="upload-hint">Поддерживаются JPG, PNG, WEBP (макс. 5MB)</p>
       </div>
 
-      <!-- Предпросмотр загруженного фото -->
+      <div v-else-if="isUploading" class="uploading-state">
+        <div class="spinner"></div>
+        <p class="upload-text">Загрузка фото...</p>
+      </div>
+
       <div v-else class="preview-container">
         <div class="preview-item">
           <img :src="image.url" alt="Загруженное фото" class="preview-image" />
@@ -36,8 +39,6 @@
             <span class="image-status">✓ Фото загружено</span>
           </div>
         </div>
-        
-        <!-- Кнопка заменить фото -->
         <button class="replace-btn" @click.stop="triggerFileInput">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 12v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7"/>
@@ -53,97 +54,90 @@
 
 <script setup>
 import { ref, defineEmits } from 'vue'
+import { authService } from '../../services/auth.services.js'
 
 const emit = defineEmits(['update'])
 
 const fileInput = ref(null)
 const image = ref(null)
+const isUploading = ref(false)
+const uploadedPath = ref(null)
 
-// Максимальный размер файла - 5MB
 const MAX_FILE_SIZE = 5 * 1024 * 1024
-// Разрешенные типы файлов
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 
-// Открыть диалог выбора файлов
 const triggerFileInput = () => {
   fileInput.value.click()
 }
 
-// Обработка выбора файла
-const onFileChange = (e) => {
+const onFileChange = async (e) => {
   const file = e.target.files[0]
   if (file) {
-    processFile(file)
+    await processFile(file)
   }
-  // Очищаем input для возможности повторной загрузки того же файла
   e.target.value = ''
 }
 
-// Обработка перетаскивания
-const handleDrop = (e) => {
+const handleDrop = async (e) => {
   const file = e.dataTransfer.files[0]
   if (file) {
-    processFile(file)
+    await processFile(file)
   }
 }
 
-// Обработка файла
-const processFile = (file) => {
-  // Проверка типа файла
+const processFile = async (file) => {
+  // Валидация
   if (!ALLOWED_TYPES.includes(file.type)) {
     alert(`Файл "${file.name}" имеет неподдерживаемый формат. Разрешены: JPG, PNG, WEBP, GIF`)
     return
   }
   
-  // Проверка размера
   if (file.size > MAX_FILE_SIZE) {
     alert(`Файл "${file.name}" слишком большой (${(file.size / 1024 / 1024).toFixed(1)}MB). Максимальный размер: 5MB`)
     return
   }
 
-  // Если уже есть фото - удаляем старый URL
-  if (image.value) {
-    URL.revokeObjectURL(image.value.url)
-  }
-
-  // Создаём URL для предпросмотра
+  // Показываем превью
   const url = URL.createObjectURL(file)
-  image.value = {
-    file: file,
-    url: url
+  image.value = { file, url }
+  
+  // Загружаем на сервер
+  isUploading.value = true
+  
+  try {
+    const response = await authService.uploadPhoto(file)
+    
+    if (response.success) {
+      uploadedPath.value = response.photo_path
+      // Отправляем путь к фото в родительский компонент
+      emit('update', uploadedPath.value)
+      console.log('✅ Фото загружено:', uploadedPath.value)
+    } else {
+      alert('Ошибка загрузки фото: ' + response.error)
+      removeImage()
+    }
+  } catch (error) {
+    console.error('Ошибка загрузки фото:', error)
+    alert('Ошибка при загрузке фото на сервер')
+    removeImage()
+  } finally {
+    isUploading.value = false
   }
-
-  // Эмитим событие с файлом
-  emit('update', file)
 }
 
-// Удаление фото
 const removeImage = () => {
   if (image.value) {
     URL.revokeObjectURL(image.value.url)
     image.value = null
+    uploadedPath.value = null
     emit('update', null)
   }
 }
 
-// Очистка фото (можно добавить, если нужно)
-const clearImage = () => {
-  if (image.value) {
-    URL.revokeObjectURL(image.value.url)
-    image.value = null
-    emit('update', null)
-  }
-}
-
-// Получить загруженный файл
-const getImage = () => {
-  return image.value ? image.value.file : null
-}
-
-// Освобождаем память при уничтожении компонента
 defineExpose({
-  clearImage,
-  getImage
+  removeImage,
+  getImage: () => image.value,
+  getUploadedPath: () => uploadedPath.value
 })
 </script>
 
@@ -196,6 +190,27 @@ defineExpose({
   font-size: 12px;
   color: #b0c0ad;
   margin: 0;
+}
+
+.uploading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e0e0e0;
+  border-top: 4px solid #386633;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .preview-container {
@@ -290,13 +305,11 @@ defineExpose({
   border-color: #386633;
 }
 
-/* Адаптив для мобильных */
 @media (max-width: 480px) {
   .upload-area {
     padding: 20px;
     min-height: 150px;
   }
-  
   .preview-item {
     max-width: 100%;
   }
