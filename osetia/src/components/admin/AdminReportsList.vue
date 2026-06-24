@@ -75,10 +75,11 @@ defineEmits(['update-status'])
   position: absolute;
   top: 15px;
   left: 15px;
-  padding: 6px 14px;
+  padding: 3px 14px;
   border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
+  font-family: "Montserrat";
   color: white;
 }
 
@@ -95,6 +96,7 @@ defineEmits(['update-status'])
 
 .card-meta {
   font-size: 12px;
+  font-family: "Montserrat";
   color: #90a08d;
   margin-bottom: 8px;
 }
@@ -102,6 +104,7 @@ defineEmits(['update-status'])
 .card-content h3 {
   margin: 0 0 10px 0;
   font-size: 17px;
+  font-family: "Montserrat";
   color: #2c3e29;
   font-weight: 600;
 }
@@ -109,6 +112,7 @@ defineEmits(['update-status'])
 .description {
   margin: 0 0 20px 0;
   font-size: 13px;
+  font-family: "Montserrat";
   color: #7a8a77;
   line-height: 1.5;
   flex-grow: 1;
@@ -125,6 +129,7 @@ defineEmits(['update-status'])
 .action-label {
   font-size: 12px;
   font-weight: 600;
+  font-family: "Montserrat";
   color: #556352;
 }
 
@@ -136,6 +141,7 @@ defineEmits(['update-status'])
   background-color: #fcfdfc;
   color: #2c3e29;
   font-size: 13px;
+  font-family: "Montserrat";
   outline: none;
   cursor: pointer;
 }

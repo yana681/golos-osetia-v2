@@ -2,7 +2,6 @@
   <div class="controls-and-grid">
     <div class="main-tabs">
       <button class="tab-btn active">Мои сообщения</button>
-      <button class="tab-btn">Избранное</button>
     </div>
 
     <div class="filter-row">
@@ -45,7 +44,7 @@
           placeholder="Поиск по сообщениям..." 
           class="search-input" 
         />
-        <button class="filter-settings-btn">🎛️</button>
+        <button class="filter-settings-btn">👇</button>
       </div>
     </div>
 
@@ -161,16 +160,11 @@ const filteredReports = computed(() => {
 .tab-btn {
   background: none;
   border: none;
-  padding: 12px 5px;
+  padding: 5px 5px;
   font-size: 16px;
   font-weight: 600;
-  color: #7a8a77;
-  cursor: pointer;
+  font-family: "Montserrat";
   position: relative;
-}
-
-.tab-btn.active {
-  color: #2c3e29;
 }
 
 .tab-btn.active::after {
@@ -198,10 +192,11 @@ const filteredReports = computed(() => {
   background: white;
   border: 1px solid #e2e8e1;
   border-radius: 20px;
-  padding: 8px 18px;
+  padding: 5px 15px;
   font-size: 14px;
   color: #556352;
   cursor: pointer;
+  font-family: "montserrat";
   transition: 0.2s;
 }
 
@@ -209,6 +204,7 @@ const filteredReports = computed(() => {
   background: #4a6b41;
   color: white;
   border-color: #4a6b41;
+  font-family: "montserrat";
 }
 
 .search-box {
@@ -220,18 +216,19 @@ const filteredReports = computed(() => {
   background: white;
   border: 1px solid #e2e8e1;
   border-radius: 20px;
-  padding: 8px 20px;
+  padding: 5px 20px;
   font-size: 14px;
   outline: none;
   width: 240px;
+  font-family: "Montserrat";
 }
 
 .filter-settings-btn {
   background: white;
   border: 1px solid #e2e8e1;
   border-radius: 50%;
-  width: 38px;
-  height: 38px;
+  width: 50px;
+  height: 50px;
   cursor: pointer;
   display: flex;
   align-items: center;

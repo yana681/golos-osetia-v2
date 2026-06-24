@@ -9,6 +9,9 @@ import RegisterView from '../views/RegisterView.vue'
 import ReportProblemView from '../views/ReportProblemView.vue'
 import UserProfileView from '../views/UserProfileView.vue'
 import AdminView from '../views/AdminView.vue'
+
+import { requireAuth, redirectIfAuth, requireAdmin, preventAdminAccess } from './guards.js'
+
 const router = createRouter({
 	history: createWebHistory(),
 	routes: [
@@ -20,12 +23,14 @@ const router = createRouter({
 		{
 			path: '/profile',
 			name: 'profile',
-			component: UserProfileView
+			component: UserProfileView,
+			beforeEnter: [requireAuth, preventAdminAccess], // ✅ Запрещаем админам
 		},
 		{
 			path: '/admin',
 			name: 'admin',
-			component: AdminView
+			component: AdminView,
+			beforeEnter: requireAdmin, // ✅ Только для администраторов
 		},
 		{
 			path: '/report-problem',
@@ -56,11 +61,13 @@ const router = createRouter({
 			path: '/login',
 			name: 'login',
 			component: LoginView,
+			beforeEnter: redirectIfAuth,
 		},
 		{
 			path: '/register',
 			name: 'register',
 			component: RegisterView,
+			beforeEnter: redirectIfAuth,
 		},
 	],
 })

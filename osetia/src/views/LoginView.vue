@@ -8,7 +8,6 @@
         <h1 class="form-title">Голос Осетии</h1>
         <p class="form-subtitle">Вход в личный кабинет</p>
 
-        <!-- Сообщение об ошибке -->
         <div v-if="errorMessage" class="error-message">
           {{ errorMessage }}
         </div>
@@ -65,7 +64,6 @@ const form = reactive({
 });
 
 const handleLogin = async () => {
-  // Очищаем предыдущие ошибки
   errorMessage.value = "";
   loading.value = true;
 
@@ -76,8 +74,15 @@ const handleLogin = async () => {
     });
 
     if (response.success) {
-      // Перенаправляем пользователя на главную страницу
-      router.push("/");
+      // ✅ Сохраняем данные пользователя в localStorage
+      localStorage.setItem('user', JSON.stringify(response.user));
+      
+      // ✅ Проверяем роль и перенаправляем
+      if (response.user.role === 'admin') {
+        router.push("/admin");
+      } else {
+        router.push("/profile");
+      }
     } else {
       errorMessage.value = response.error || "Ошибка при входе";
     }
@@ -89,7 +94,6 @@ const handleLogin = async () => {
   }
 };
 </script>
-
 
 <style scoped>
 .login-page {
@@ -108,7 +112,7 @@ const handleLogin = async () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('/src/assets/vladikavkaz.jpg'); 
+  background-image: url('/src/assets/vladikavkaz.jpg');
   background-size: cover;
   background-position: center;
   z-index: 1;
@@ -128,11 +132,10 @@ const handleLogin = async () => {
   position: relative;
   width: 100%;
   max-width: 420px;
-  /* фон с размытием (Glassmorphism) */
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px; 
+  border-radius: 20px;
   padding: 50px 40px;
   z-index: 3;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
@@ -212,6 +215,11 @@ const handleLogin = async () => {
   background-color: rgba(120, 63, 28, 1);
 }
 
+.login-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .register-link {
   margin-top: 25px;
   text-align: center;
@@ -225,6 +233,7 @@ const handleLogin = async () => {
   font-weight: 500;
   text-decoration: none;
 }
+
 .error-message {
   background-color: rgba(220, 53, 69, 0.9);
   color: white;
@@ -234,10 +243,5 @@ const handleLogin = async () => {
   text-align: center;
   font-family: 'Montserrat', serif;
   font-size: 14px;
-}
-
-.login-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
 }
 </style>

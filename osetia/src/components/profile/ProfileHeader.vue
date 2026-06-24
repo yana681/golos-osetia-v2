@@ -2,14 +2,14 @@
   <div class="profile-header">
     <div class="left">
       <img
-        src="https://static.vecteezy.com/system/resources/previews/024/183/525/non_2x/avatar-of-a-man-portrait-of-a-young-guy-illustration-of-male-character-in-modern-color-style-vector.jpg"
+        :src="user?.avatar || 'https://i.pinimg.com/originals/77/98/e1/7798e172c38272ebabe28c6891dccd36.jpg'"
         class="avatar"
       />
 
       <div class="user-info">
         <span class="badge">Активный житель</span>
-        <h1>Иванов Иван</h1>
-        <p class="email">example@gmail.com</p>
+        <h1>{{ user?.username || 'Пользователь' }}</h1>
+        <p class="email">{{ user?.email || 'example@gmail.com' }}</p>
         
         <div class="meta-info">
           <span>📍 Владикавказ</span>
@@ -18,16 +18,25 @@
       </div>
     </div>
 
-    <div class="right-buttons">
+    <!--<div class="right-buttons">
       <button class="btn-edit">Редактировать профиль</button>
       <button class="btn-settings">⚙️ Настройки</button>
-    </div>
+    </div>-->
   </div>
 </template>
 
+<script setup>
+defineProps({
+  user: {
+    type: Object,
+    default: () => null
+  }
+})
+</script>
+
 <style scoped>
 .profile-header {
-  background: #3d5a35; 
+  background: #386633;
   border-radius: 30px;
   padding: 40px;
   display: flex;
@@ -39,6 +48,7 @@
 .left {
   display: flex;
   gap: 30px;
+  margin-left: 50px;
   align-items: center;
 }
 
@@ -53,38 +63,45 @@
 .user-info {
   display: flex;
   flex-direction: column;
+  margin-left: 10px;
   align-items: flex-start;
 }
 
 .badge {
   display: inline-block;
-  padding: 6px 14px;
+  padding: 6px 10px;
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   font-size: 12px;
-  margin-bottom: 12px;
+  font-family: "Montserrat";
+  margin-bottom: 2px;
 }
 
 .user-info h1 {
-  margin: 0 0 6px 0;
-  font-size: 32px;
+  margin: 0 0 3px 0;
+  font-size: 46px;
+  padding: 6px;
   font-weight: 500;
+  font-family: "Podkova";
 }
 
 .email {
   margin: 0 0 15px 0;
   color: rgba(255, 255, 255, 0.7);
   font-size: 15px;
+  font-family: "Montserrat";
+  margin-left: 10px;
 }
 
 .meta-info {
   display: flex;
   gap: 20px;
   font-size: 13px;
+  font-family:"montserrat";
   color: rgba(255, 255, 255, 0.8);
 }
-
+/*
 .right-buttons {
   display: flex;
   flex-direction: column;
@@ -120,5 +137,5 @@
 
 .btn-settings:hover {
   background: rgba(255, 255, 255, 0.2);
-}
+}*/
 </style>

@@ -54,6 +54,13 @@ export const authService = {
     });
     return handleResponse(response);
   },
-};
 
-// Users API (пример для работы с пользователями)
+  // ✅ Новая функция для проверки роли пользователя
+  checkAdminRole: async () => {
+    const response = await fetch(`${API_BASE_URL}/check-admin.php`, {
+      ...defaultOptions,
+      method: "GET",
+    });
+    return handleResponse(response);
+  },
+};

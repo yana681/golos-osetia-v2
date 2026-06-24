@@ -8,6 +8,16 @@
         <h1 class="form-title">Голос Осетии</h1>
         <p class="form-subtitle">Создание нового аккаунта</p>
 
+        <!-- Сообщение об успехе -->
+        <div v-if="successMessage" class="success-message">
+          {{ successMessage }}
+        </div>
+
+        <!-- Сообщение об ошибке -->
+        <div v-if="auth.error.value" class="error-message">
+          {{ auth.error.value }}
+        </div>
+
         <div class="input-group">
           <input
             type="text"
@@ -56,7 +66,9 @@
           </label>
         </div>
 
-        <button type="submit" class="register-btn">Зарегистрироваться</button>
+        <button type="submit" class="register-btn" :disabled="auth.loading.value">
+          {{ auth.loading.value ? 'Регистрация...' : 'Зарегистрироваться' }}
+        </button>
 
         <div class="login-link">
           Уже есть аккаунт? <router-link to="/login">Войти</router-link>
@@ -68,10 +80,11 @@
 
 <script setup>
 import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
 import { useAuth } from "../composables/useAuth";
 
+const router = useRouter();
 const auth = useAuth();
-const isLoginMode = ref(true);
 const successMessage = ref("");
 
 const form = reactive({
@@ -96,21 +109,27 @@ const handleSubmit = async () => {
   }
 
   try {
-    await auth.register({
+    const response = await auth.register({
       username: form.username,
       email: form.email,
       password: form.password,
     });
 
-    successMessage.value = "Регистрация успешна! Теперь войдите.";
+    successMessage.value = "Регистрация успешна! Сейчас вы будете перенаправлены на страницу входа...";
 
+    // Очищаем форму
     Object.assign(form, {
       username: "",
       email: "",
-      login: "",
       password: "",
       passwordConfirm: "",
     });
+
+    // ✅ Перенаправляем на страницу входа через 2 секунды
+    setTimeout(() => {
+      router.push('/login');
+    }, 2000);
+
   } catch (error) {
     console.error("Ошибка:", error);
   }
@@ -119,6 +138,7 @@ const handleSubmit = async () => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300..700;1,300..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pochaevsk&family=Podkova:wght@400..800&family=Poiret+One&display=swap");
+
 .register-page {
   width: 100%;
   height: 100vh;
@@ -206,7 +226,7 @@ const handleSubmit = async () => {
 .password-row {
   display: flex;
   justify-content: space-between;
-  gap: 40px; /* Четкий зазор между полями */
+  gap: 40px;
   margin-bottom: 18px;
   width: 100%;
 }
@@ -214,7 +234,7 @@ const handleSubmit = async () => {
 .password-row .input-group {
   flex: 1;
   margin-bottom: 0;
-  min-width: 0; /* Важно для корректной работы flexbox с input */
+  min-width: 0;
 }
 
 .form-terms {
@@ -259,6 +279,11 @@ const handleSubmit = async () => {
   background-color: rgba(120, 63, 28, 1);
 }
 
+.register-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .login-link {
   text-align: center;
   color: rgba(255, 255, 255, 0.8);
@@ -272,10 +297,31 @@ const handleSubmit = async () => {
   text-decoration: none;
 }
 
-/* --- АДАПТИВНОСТЬ: Перестроение полей на мобильных --- */
+.error-message {
+  background-color: rgba(220, 53, 69, 0.9);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: 'Montserrat', serif;
+  font-size: 14px;
+}
+
+.success-message {
+  background-color: rgba(46, 204, 113, 0.9);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: 'Montserrat', serif;
+  font-size: 14px;
+}
+
 @media (max-width: 480px) {
   .password-row {
-    flex-direction: column; /* Поля встают друг под друга */
+    flex-direction: column;
     gap: 10px;
   }
 }
