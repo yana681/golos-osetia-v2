@@ -128,6 +128,7 @@ const updateStatus = async (reportId, newStatus) => {
   padding: 6px 14px;
   border-radius: 8px;
   font-size: 12px;
+  font-family: "Montserrat";
   font-weight: 600;
   color: white;
   z-index: 10;
@@ -147,6 +148,7 @@ const updateStatus = async (reportId, newStatus) => {
 
 .card-meta {
   font-size: 12px;
+  font-family: "Montserrat";
   color: #90a08d;
   margin-bottom: 8px;
 }
@@ -154,6 +156,7 @@ const updateStatus = async (reportId, newStatus) => {
 .card-content h3 {
   margin: 0 0 10px 0;
   font-size: 17px;
+  font-family: "Montserrat";
   color: #2c3e29;
   font-weight: 600;
 }
@@ -161,6 +164,7 @@ const updateStatus = async (reportId, newStatus) => {
 .description {
   margin: 0 0 20px 0;
   font-size: 13px;
+  font-family: "Montserrat";
   color: #7a8a77;
   line-height: 1.5;
   flex-grow: 1;
@@ -177,6 +181,7 @@ const updateStatus = async (reportId, newStatus) => {
 .action-label {
   font-size: 12px;
   font-weight: 600;
+  font-family: "Montserrat";
   color: #556352;
 }
 
@@ -206,6 +211,7 @@ const updateStatus = async (reportId, newStatus) => {
   border-radius: 20px;
   color: #7a8a77;
   font-size: 16px;
+  font-family: "Montserrat";
 }
 
 @media (max-width: 992px) {

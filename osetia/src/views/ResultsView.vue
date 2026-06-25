@@ -9,121 +9,187 @@
             <img src="/src/assets/icons/check.png" alt="check" class="check-icon" />
           </div>
           <div class="stats-text">
-            <span class="count">182 256</span>
-            <span class="subtext">проблем решено</span>
+            <span class="count">{{ totalResults }}</span>
+            <span class="subtext">проблем решено и в работе</span>
           </div>
         </div>
 
         <div class="info-tags">
           <div class="info-label-wrapper">
             <span class="info-label">Самая популярная тема:</span>
-            <span class="info-value">Дороги</span>
+            <span class="info-value">{{ topCategory || 'Дороги' }}</span>
           </div>
           <div class="info-label-wrapper">
             <span class="info-label">Самый активный район:</span>
-            <span class="info-value">Центральный</span>
+            <span class="info-value">{{ topDistrict || 'Центральный' }}</span>
           </div>
         </div>
       </header>
 
-      <div class="results-grid">
-        <div v-for="card in resultsData" :key="card.id" class="result-card">
+      <!-- ✅ Статистика по статусам -->
+      <div class="status-stats">
+        <div class="status-stat-item">
+          <div>
+            <span class="status-stat-count">{{ resolvedCount }}</span>
+            <span class="status-stat-label">Решено</span>
+          </div>
+        </div>
+        <div class="status-stat-divider"></div>
+        <div class="status-stat-item">
+          <div>
+            <span class="status-stat-count">{{ inProgressCount }}</span>
+            <span class="status-stat-label">В работе</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ Сетка с карточками -->
+      <div v-if="!isLoading && results.length > 0" class="results-grid">
+        <div v-for="card in results" :key="card.id" class="result-card">
           <div class="card-image-wrapper">
-            <img :src="card.image" :alt="card.category" class="card-img" />
+            <img :src="card.photo_url || '/src/assets/placeholder.jpg'" :alt="card.category" class="card-img" />
             <div class="card-overlay">
-              <span class="view-details">Подробнее</span>
+              <span class="view-details" @click="openDetails(card)">Подробнее</span>
             </div>
+            <span class="card-status-badge" :class="card.status_class">
+              {{ card.status_text }}
+            </span>
           </div>
           <div class="card-body">
+            <div class="card-category-tag">{{ getCategoryLabel(card.category) }}</div>
             <p class="card-address">{{ card.address }}</p>
             <div class="card-footer">
-              <span class="card-category">{{ card.category }}</span>
-              <span 
-                class="card-status" 
-                :class="{ 'status-in-progress': card.status === 'В работе' }"
-              >
-                {{ card.status }}
-              </span>
+              <span class="card-user">👤 {{ card.user_name }}</span>
+              <span class="card-date">📅 {{ card.date }}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="footer-action">
-        <button class="btn-all">Показать все</button>
+      <!-- ✅ Загрузка -->
+      <div v-if="isLoading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Загрузка результатов...</p>
+      </div>
+
+      <!-- ✅ Пустое состояние -->
+      <div v-if="!isLoading && results.length === 0" class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#c5d2c3" stroke-width="1.5">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          <line x1="9" y1="10" x2="15" y2="10"/>
+        </svg>
+        <p class="empty-text">Нет результатов</p>
+        <p class="empty-hint">Пока нет решённых или активных заявок</p>
+      </div>
+
+      <!-- ✅ Кнопка "Показать ещё" (пагинация) -->
+      <div v-if="!isLoading && results.length > 0 && hasMore" class="footer-action">
+        <button class="btn-all" @click="loadMore" :disabled="isLoadingMore">
+          {{ isLoadingMore ? 'Загрузка...' : 'Показать ещё' }}
+        </button>
       </div>
     </div>
+
+    <!-- ✅ Модальное окно с деталями -->
+    <ReportDetailModal 
+      :visible="modalVisible"
+      :report="selectedReport"
+      @close="modalVisible = false"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { authService } from '../services/auth.services.js'
+import ReportDetailModal from '../components/profile/ReportDetailModal.vue'
 
-const resultsData = ref([
-  {
-    id: 1,
-    image: '/src/assets/garbage.png',
-    address: 'Липовая аллея, улица Красного Маяка, дом 17, корпус 2',
-    category: 'Парк',
-    status: 'Решено'
-  },
-  {
-    id: 2,
-    image: '/src/assets/garbage.png',
-    address: 'Проспект Мира, дом 45, перекресток с ул. Ленина',
-    category: 'Дороги',
-    status: 'В работе'
-  },
-  {
-    id: 3,
-    image: '/src/assets/garbage.png',
-    address: 'Бульвар Гагарина, дом 8, дворовая территория',
-    category: 'Мой двор',
-    status: 'Решено'
-  },
-  {
-    id: 4,
-    image: '/src/assets/garbage.png',
-    address: 'Остановка "Дворец спорта", маршрут №5',
-    category: 'Транспорт',
-    status: 'Решено'
-  },
-  {
-    id: 5,
-    image: '/src/assets/garbage.png',
-    address: 'Улица Пушкина, дом 23, контейнерная площадка',
-    category: 'Мусор',
-    status: 'В работе'
-  },
-  {
-    id: 6,
-    image: '/src/assets/garbage.png',
-    address: 'Парк им. Коста Хетагурова, центральная аллея',
-    category: 'Экология',
-    status: 'Решено'
-  },
-  {
-    id: 7,
-    image: '/src/assets/garbage.png',
-    address: 'Улица Московская, дом 56, пешеходный переход',
-    category: 'Безопасность',
-    status: 'В работе'
-  },
-  {
-    id: 8,
-    image: '/src/assets/garbage.png',
-    address: 'Переулок Спортивный, дом 3, детская площадка',
-    category: 'Мой двор',
-    status: 'Решено'
-  },
-  {
-    id: 9,
-    image: '/src/assets/garbage.png',
-    address: 'Проспект Коста, дом 101, прилегающая территория',
-    category: 'Городская территория',
-    status: 'Решено'
+const results = ref([])
+const isLoading = ref(false)
+const isLoadingMore = ref(false)
+const modalVisible = ref(false)
+const selectedReport = ref(null)
+
+// Пагинация
+const currentPage = ref(1)
+const perPage = 6
+const totalItems = ref(0)
+const totalPages = ref(0)
+
+// Статистика
+const resolvedCount = ref(0)
+const inProgressCount = ref(0)
+const topCategory = ref('')
+const topDistrict = ref('')
+
+// Вычисляемые свойства
+const totalResults = computed(() => totalItems.value)
+const hasMore = computed(() => currentPage.value < totalPages.value)
+
+// Загрузка результатов
+const loadResults = async (page = 1, append = false) => {
+  try {
+    const response = await authService.getResults(page, perPage)
+    
+    if (response.success) {
+      if (append) {
+        results.value = [...results.value, ...response.reports]
+      } else {
+        results.value = response.reports
+      }
+      
+      currentPage.value = response.pagination.current_page
+      totalItems.value = response.pagination.total
+      totalPages.value = response.pagination.total_pages
+      
+      // Подсчитываем статистику
+      resolvedCount.value = results.value.filter(r => r.status === 'resolved').length
+      inProgressCount.value = results.value.filter(r => r.status === 'in-progress').length
+      
+      // Определяем самую популярную тему
+      const categoryCount = {}
+      results.value.forEach(r => {
+        const cat = r.category || 'Неизвестно'
+        categoryCount[cat] = (categoryCount[cat] || 0) + 1
+      })
+      let maxCount = 0
+      let maxCategory = 'Дороги'
+      for (const [cat, count] of Object.entries(categoryCount)) {
+        if (count > maxCount) {
+          maxCount = count
+          maxCategory = cat
+        }
+      }
+      topCategory.value = getCategoryLabel(maxCategory)
+    }
+  } catch (error) {
+    console.error('Ошибка загрузки результатов:', error)
   }
-])
+}
+
+// Загрузить ещё
+const loadMore = async () => {
+  if (isLoadingMore.value || !hasMore.value) return
+  
+  isLoadingMore.value = true
+  await loadResults(currentPage.value + 1, true)
+  isLoadingMore.value = false
+}
+
+// Открыть детали
+const openDetails = (report) => {
+  selectedReport.value = report
+  modalVisible.value = true
+}
+
+// Загрузка при монтировании
+onMounted(() => {
+  isLoading.value = true
+  loadResults()
+    .finally(() => {
+      isLoading.value = false
+    })
+})
 </script>
 
 <style scoped>
@@ -144,6 +210,7 @@ const resultsData = ref([
   align-items: center;
   padding: 50px 0 30px 0;
   gap: 40px;
+  flex-wrap: wrap;
 }
 
 .main-title {
@@ -168,6 +235,7 @@ const resultsData = ref([
   background-color: #386633;
   border-radius: 4px;
 }
+
 .stats-container {
   display: flex;
   align-items: center;
@@ -262,7 +330,52 @@ const resultsData = ref([
   color: #386633;
 }
 
-/* Сетка карточек */
+/* ✅ Статистика по статусам */
+.status-stats {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 16px 32px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.status-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-stat-icon {
+  font-size: 24px;
+}
+
+.status-stat-count {
+  font-family: 'Podkova', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c3e29;
+  display: block;
+}
+
+.status-stat-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: #7a8a77;
+  display: block;
+  margin-top: -4px;
+}
+
+.status-stat-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* ✅ Сетка карточек */
 .results-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -287,7 +400,7 @@ const resultsData = ref([
 .card-image-wrapper {
   position: relative;
   overflow: hidden;
-  height: 240px;
+  height: 220px;
 }
 
 .card-img {
@@ -307,7 +420,7 @@ const resultsData = ref([
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(52, 103, 53, 0.4);
+  background: rgba(52, 103, 53, 0.3);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   display: flex;
@@ -315,6 +428,7 @@ const resultsData = ref([
   justify-content: center;
   opacity: 0;
   transition: opacity 0.3s ease;
+  cursor: pointer;
 }
 
 .result-card:hover .card-overlay {
@@ -323,7 +437,7 @@ const resultsData = ref([
 
 .view-details {
   color: white;
-  font-family: "montserrat";
+  font-family: "Montserrat";
   font-size: 14px;
   font-weight: 500;
   padding: 10px 24px;
@@ -332,25 +446,51 @@ const resultsData = ref([
   backdrop-filter: blur(5px);
   transform: translateY(15px);
   transition: transform 0.3s ease;
+  cursor: pointer;
 }
 
 .result-card:hover .view-details {
   transform: translateY(0);
 }
 
+.card-status-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.card-status-badge.in-progress { background: #2f80ed; }
+.card-status-badge.resolved { background: #27ae60; }
+
 .card-body {
-  padding: 24px;
+  padding: 20px;
+}
+
+.card-category-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(56, 102, 51, 0.08);
+  border-radius: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #4a6b41;
+  margin-bottom: 10px;
 }
 
 .card-address {
   font-family: "Montserrat";
   font-weight: 500;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.5;
   color: #2c3e50;
-  margin-top: -10px;
-  margin-bottom: 20px;
-  height: 44px;
+  margin: 0 0 15px 0;
+  min-height: 44px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -361,38 +501,87 @@ const resultsData = ref([
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-top: 1px solid #f0f4ef;
+  padding-top: 12px;
 }
 
-.card-category {
+.card-user {
   font-family: "Montserrat";
   font-size: 12px;
-  font-weight: 600;
-  background: rgba(52, 103, 53, 0.08);
-  padding: 6px 14px;
-  border-radius: 10px;
-  color: #346735;
+  color: #7a8a77;
 }
-.card-status {
+
+.card-date {
   font-family: "Montserrat";
   font-size: 12px;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 50px;
-  background-color: rgba(46, 204, 113, 0.15);
-  color: #27ae60;
-  white-space: nowrap;
+  color: #90a08d;
 }
 
-.card-status.status-in-progress {
-  background-color: rgba(230, 126, 34, 0.15);
-  color: #d35400;
+/* ✅ Загрузка */
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e0e0e0;
+  border-top: 4px solid #386633;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-state p {
+  font-family: 'Montserrat', sans-serif;
+  color: #7a8a77;
+  margin: 0;
+}
+
+/* ✅ Пустое состояние */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.empty-state svg {
+  opacity: 0.4;
+}
+
+.empty-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  color: #7a8a77;
+  margin: 0;
+}
+
+.empty-hint {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #b0c0ad;
+  margin: 0;
+}
+
+/* ✅ Кнопка "Показать ещё" */
 .footer-action {
   display: flex;
   justify-content: center;
-  margin-top: 60px;
+  margin-top: 50px;
 }
+
 .btn-all {
   width: 280px;
   height: 54px;
@@ -407,11 +596,16 @@ const resultsData = ref([
   transition: transform 0.3s ease;
 }
 
-.btn-all:hover {
+.btn-all:hover:not(:disabled) {
   transform: scale(1.05);
 }
 
-/* Адаптивность */
+.btn-all:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ✅ Адаптивность */
 @media (max-width: 1200px) {
   .results-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -419,7 +613,6 @@ const resultsData = ref([
   }
   
   .results-header {
-    flex-wrap: wrap;
     gap: 24px;
   }
   
@@ -452,6 +645,17 @@ const resultsData = ref([
   
   .btn-all {
     width: 100%;
+  }
+
+  .status-stats {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .status-stat-divider {
+    width: 80%;
+    height: 1px;
   }
 }
 </style>

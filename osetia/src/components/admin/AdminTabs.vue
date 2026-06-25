@@ -73,7 +73,7 @@ const tags = [
 }
 
 .tag-btn.active {
-  background: #4a6b41;
+  background: #386633;
   color: white;
   border-color: #4a6b41;
 }
@@ -84,6 +84,7 @@ const tags = [
   border-radius: 20px;
   padding: 10px 20px;
   font-size: 14px;
+  font-family: "Montserrat";
   outline: none;
   width: 280px;
 }

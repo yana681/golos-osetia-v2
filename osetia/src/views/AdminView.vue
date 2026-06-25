@@ -131,7 +131,7 @@ const filteredReports = computed(() => {
         </div>
         <div class="header-right">
           <button class="btn-refresh" @click="refreshData">🔄 Обновить</button>
-          <button class="btn-logout" @click="logout">🚪 Выйти</button>
+          <button class="btn-logout" @click="logout"> Выйти</button>
         </div>
       </div>
 
@@ -220,7 +220,9 @@ const filteredReports = computed(() => {
 
 .admin-info h1 {
   margin: 0 0 6px 0;
-  font-size: 30px;
+  margin-bottom: -5px;
+  font-size: 40px;
+  font-family: "Podkova";
   font-weight: 500;
 }
 
@@ -229,8 +231,9 @@ const filteredReports = computed(() => {
   padding: 4px 12px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 20px;
-  font-size: 11px;
-  margin-bottom: 8px;
+  font-size: 10px;
+  font-family: "Montserrat";
+  margin-bottom: 4px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -239,6 +242,7 @@ const filteredReports = computed(() => {
   margin: 0;
   color: rgba(255, 255, 255, 0.7);
   font-size: 15px;
+  font-family: "Montserrat";
 }
 
 .header-right {
@@ -248,11 +252,12 @@ const filteredReports = computed(() => {
 
 .btn-refresh {
   background: white;
-  color: #3d5a35;
+  color: #386633;
   border: none;
   border-radius: 12px;
   padding: 12px 24px;
   font-size: 14px;
+  font-family: "montserrat";
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
@@ -270,6 +275,7 @@ const filteredReports = computed(() => {
   padding: 12px 24px;
   font-size: 14px;
   font-weight: 600;
+  font-family: "Montserrat";
   cursor: pointer;
   transition: 0.2s;
 }
@@ -301,22 +307,22 @@ const filteredReports = computed(() => {
   margin: 0 0 6px 0;
   font-size: 36px;
   font-weight: 600;
-  color: #2c3e29;
+  font-family: "Podkova";
+  color: #825940;
 }
-
-.stat-item h2.status-checking { color: #e09943; }
-.stat-item h2.status-progress { color: #2f80ed; }
-.stat-item h2.status-resolved { color: #27ae60; }
 
 .stat-label {
   font-size: 16px;
   font-weight: 600;
+  font-family: "Montserrat";
   color: #2c3e29;
-  margin-bottom: 4px;
+  margin-bottom: 0px;
 }
 
 .stat-sub {
   font-size: 12px;
+  margin-top: -10px;
+  font-family: "Montserrat";
   color: #90a08d;
 }
 

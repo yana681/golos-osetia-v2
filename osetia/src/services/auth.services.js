@@ -39,6 +39,14 @@ export const authService = {
     return handleResponse(response);
   },
 
+  getResults: async (page = 1, limit = 6) => {
+    const response = await fetch(`${API_BASE_URL}/get-results.php?page=${page}&limit=${limit}`, {
+      ...defaultOptions,
+      method: "GET",
+    });
+    return handleResponse(response);
+  },
+
   checkAuth: async () => {
     const response = await fetch(`${API_BASE_URL}/check-auth.php`, {
       ...defaultOptions,

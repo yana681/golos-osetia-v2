@@ -52,6 +52,7 @@
         :date="report.date"
         :likes="0"
         :imgSrc="report.photo_url || '/src/assets/placeholder.jpg'"
+        @view-details="openDetails(report)"
       />
     </div>
     
@@ -63,6 +64,13 @@
       <p class="empty-text">У вас пока нет заявок</p>
       <p class="empty-hint">Создайте новую заявку, чтобы начать</p>
     </div>
+
+    <!-- ✅ Модальное окно с деталями - вынесено на самый верхний уровень -->
+    <ReportDetailModal 
+      :visible="modalVisible"
+      :report="selectedReport"
+      @close="modalVisible = false"
+    />
   </div>
 </template>
 
@@ -70,11 +78,16 @@
 import { ref, computed, onMounted } from 'vue'
 import { authService } from '../../services/auth.services.js'
 import ReportCard from './ReportCard.vue'
+import ReportDetailModal from './ReportDetailModal.vue'
 
 const currentFilter = ref('all')
 const searchQuery = ref('')
 const reports = ref([])
 const isLoading = ref(false)
+
+// Состояние модального окна
+const modalVisible = ref(false)
+const selectedReport = ref(null)
 
 const filters = [
   { label: 'Все', value: 'all' },
@@ -84,23 +97,31 @@ const filters = [
   { label: 'Отклонено', value: 'rejected' }
 ]
 
+const openDetails = (report) => {
+  console.log('📋 Открытие деталей заявки:', report.id)
+  selectedReport.value = report
+  modalVisible.value = true
+}
+
 const loadReports = async () => {
   isLoading.value = true
   try {
     const response = await authService.getUserReports()
-    console.log('📥 Ответ от сервера:', response) // ✅ Для отладки
     
     if (response.success) {
       reports.value = response.reports.map(report => {
-        // ✅ Проверяем, есть ли фото
-        console.log('📸 Фото для заявки', report.id, ':', report.photo_url)
+        let photoUrl = null
+        if (report.photo_path) {
+          if (report.photo_path.startsWith('http')) {
+            photoUrl = report.photo_path
+          } else {
+            photoUrl = `http://voiceossetia.local${report.photo_path}`
+          }
+        }
         
         return {
           ...report,
-          // Если photo_url начинается с /uploads, добавляем http://voiceossetia.local
-          photo_url: report.photo_url && !report.photo_url.startsWith('http') 
-            ? `http://voiceossetia.local${report.photo_url}` 
-            : report.photo_url
+          photo_url: photoUrl
         }
       })
     }
@@ -138,6 +159,7 @@ onMounted(() => {
   padding: 28px 30px;
   border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  position: relative;
 }
 
 .reports-header {

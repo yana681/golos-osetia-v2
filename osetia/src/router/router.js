@@ -70,6 +70,11 @@ const router = createRouter({
 			component: RegisterView,
 			beforeEnter: redirectIfAuth,
 		},
+		{
+			path: '/results',
+			name: 'results',
+			component: ResultsView,
+		},
 	],
 })
 

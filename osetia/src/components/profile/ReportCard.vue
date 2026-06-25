@@ -1,7 +1,7 @@
 <template>
   <div class="report-card">
     <div class="image-container">
-      <img :src="imgSrc" alt="Проблема">
+      <img :src="imgSrc" alt="Проблема" @error="handleImageError" />
       <span class="status-badge" :class="statusClass">{{ statusText }}</span>
     </div>
 
@@ -16,14 +16,16 @@
 
       <div class="card-footer">
         <div class="likes">❤ {{ likes }}</div>
-        <button class="details-btn">Подробнее ➔</button>
+        <button class="details-btn" @click="$emit('view-details')">
+          Подробнее ➔
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   title: { type: String, default: 'Яма на тротуаре по ул. Ленина, 23' },
   description: { type: String, default: 'Глубокая яма мешает проходу, особенно в дождливую погоду.' },
   statusText: { type: String, default: 'На проверке' },
@@ -31,8 +33,15 @@ defineProps({
   location: { type: String, default: 'ул. Ленина, 23' },
   date: { type: String, default: '12.05.2025' },
   likes: { type: Number, default: 12 },
-  imgSrc: { type: String, default: 'https://images.unsplash.com/photo-1515162305285-0293e4767cc2?auto=format&fit=crop&w=400&q=80' }
+  imgSrc: { type: String, default: '/src/assets/placeholder.jpg' }
 })
+
+// ✅ Добавляем emit
+defineEmits(['view-details'])
+
+const handleImageError = (e) => {
+  e.target.src = '/src/assets/placeholder.jpg'
+}
 </script>
 
 <style scoped>
@@ -44,12 +53,19 @@ defineProps({
   display: flex;
   flex-direction: column;
   text-align: left;
+  transition: all 0.3s ease;
+}
+
+.report-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
 }
 
 .image-container {
   position: relative;
   width: 100%;
   height: 200px;
+  background: #f5f5f5;
 }
 
 .image-container img {
@@ -58,22 +74,27 @@ defineProps({
   object-fit: cover;
 }
 
+.image-container img[src*="placeholder"] {
+  object-fit: contain;
+  padding: 20px;
+}
+
 .status-badge {
   position: absolute;
   top: 15px;
   left: 15px;
-  padding: 2px 15px;
-  border-radius: 100px;
+  padding: 6px 14px;
+  border-radius: 8px;
   font-size: 12px;
+  font-family: "Montserrat";
   font-weight: 600;
-  font-family: "montserrat";
   color: white;
 }
 
-.status-badge.checking { background: #e09943; } /* На проверке - оранжевый */
-.status-badge.in-progress { background: #2f80ed; } /* В работе - синий */
-.status-badge.resolved { background: #27ae60; } /* Решено - зеленый */
-.status-badge.rejected { background: #e93737;} /*отклонено - красный*/
+.status-badge.checking { background: #e09943; }
+.status-badge.in-progress { background: #2f80ed; }
+.status-badge.resolved { background: #27ae60; }
+.status-badge.rejected { background: #e74c3c; }
 
 .content {
   padding: 20px;
@@ -87,42 +108,44 @@ defineProps({
   font-size: 16px;
   color: #2c3e29;
   font-weight: 600;
-  font-family: "montserrat";
+  font-family: "Montserrat";
   line-height: 1.4;
 }
 
 .description {
-  margin: 0 0 1px 0;
+  margin: 0 0 15px 0;
   font-size: 13px;
-  font-family: "montserrat";
+  font-family: "Montserrat";
   color: #7a8a77;
   line-height: 1.5;
   flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .meta-row {
   display: flex;
   gap: 15px;
   font-size: 12px;
-  font-family: "Montserrat";
+  font-family: 'Montserrat';
   color: #90a08d;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   border-bottom: 1px solid #f0f4ef;
-  padding-bottom: 15px;
+  padding-bottom: 12px;
 }
 
 .card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 5px;
 }
 
 .likes {
   font-size: 14px;
   color: #556352;
   font-weight: 500;
-  font-family: "montserrat";
 }
 
 .details-btn {
@@ -131,12 +154,14 @@ defineProps({
   color: #4a6b41;
   font-weight: 600;
   font-size: 13px;
-  font-family: "Montserrat";
   cursor: pointer;
-  padding: 0;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .details-btn:hover {
+  background: rgba(74, 107, 65, 0.08);
   text-decoration: underline;
 }
 </style>
