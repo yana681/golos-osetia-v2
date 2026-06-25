@@ -145,7 +145,7 @@ const logout = () => {
 }
 
 .banner-btn:hover {
-  background: #40743a;
+  background: #386633;
 }
 
 .logout-btn {

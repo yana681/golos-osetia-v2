@@ -15,7 +15,6 @@
       </div>
 
       <div class="card-footer">
-        <div class="likes">❤ {{ likes }}</div>
         <button class="details-btn" @click="$emit('view-details')">
           Подробнее ➔
         </button>

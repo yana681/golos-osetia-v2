@@ -92,21 +92,24 @@ const submitForm = async () => {
     const response = await authService.submitReport(reportData)
 
     if (response.success) {
-      submitMessage.value = '✅ Заявка успешно отправлена!'
-      
-      formData.value = {
-        category: '',
-        subtheme: '',
-        description: '',
-        address: '',
-        contact: '',
-        photo_path: null
-      }
-      
-      setTimeout(() => {
-        router.push('/profile')
-      }, 2000)
+    submitMessage.value = '✅ Заявка успешно отправлена!'
+    
+    // Очищаем форму
+    formData.value = {
+      category: '',
+      subtheme: '',
+      description: '',
+      address: '',
+      contact: '',
+      photo_path: null
     }
+    
+    // ✅ Обновляем статистику в профиле
+    // Используем событие или переходим в профиль
+    setTimeout(() => {
+      router.push('/profile')
+    }, 2000)
+  } 
   } catch (error) {
     console.error('Ошибка отправки:', error)
     submitMessage.value = '❌ Ошибка: ' + error.message

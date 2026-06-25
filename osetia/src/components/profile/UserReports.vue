@@ -50,7 +50,6 @@
         :statusClass="report.status_class"
         :location="report.address"
         :date="report.date"
-        :likes="0"
         :imgSrc="report.photo_url || '/src/assets/placeholder.jpg'"
         @view-details="openDetails(report)"
       />
